@@ -4,13 +4,13 @@
 class Tentacle:
     __l = 64
 
-    def __init__(self, n, p):
+    def __init__(self, n):
         self.__n = n  # Tentacle number
 
         # Tentacle dimensions, each being 64 pixels in length
         self.__dims = {
             'start': (n * self.__l) - self.__l,
-            'end': n * self.__l
+            'end': n * self.__l - 1
         }
 
     def __iter__(self):
@@ -22,7 +22,7 @@ class Tentacle:
     def which(self):
         return self.__n
 
-    def dim(self):
+    def dims(self):
         return self.__dims
 
     def set(self, pixels, red, green, blue):
@@ -30,3 +30,6 @@ class Tentacle:
             (red, green, blue) for x in range(self.__l)]
 
         return pixels
+
+    def get(self, pixels):
+        return pixels[self.__dims['start']:self.__dims['end']]

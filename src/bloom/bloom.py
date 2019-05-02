@@ -24,10 +24,10 @@ class LuminousBloom(object):
 
         for t in self.tentacles:
             self.tentacles[t] = Tentacle(t, self.pixels)
-        str(self.tentacles)
-        self.writePixels()
 
-    def writePixels(self, tsleep=0):
+        self.write_pixels()
+
+    def write_pixels(self, tsleep=0):
         self.client.put_pixels(self.pixels, 0)
         sleep(tsleep)
 
@@ -36,3 +36,13 @@ class LuminousBloom(object):
             red, green, blue = rgb
 
         self.pixels = self.tentacles[t].set(self.pixels, red, green, blue)
+
+    def swipe_down(self, tentacle, color=(255, 255, 255), tsleep=0.01):
+        for t in self.tentacles[tentacle]:
+            self.pixels[t] = color
+            self.write_pixels(tsleep)
+
+    def swipe_up(self, tentacle, color=(255, 255, 255), tsleep=0.01):
+        for t in reversed(list(self.tentacles[tentacle])):
+            self.pixels[t] = color
+            self.write_pixels(tsleep)

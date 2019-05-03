@@ -4,6 +4,16 @@ from multiprocessing import Process
 from bloom.bloom import LuminousBloom
 
 b = LuminousBloom()
+b.multi_swipe_up(color=(255, 255, 255))
+b.multi_swipe_up([1, 3, 5], (255, 0, 0))
+b.multi_swipe_up([2, 4, 6], (0, 255, 0))
+b.rainbow_rotate()
+# b.swipe_up(1, (255, 255, 255))
+# b.swipe_up(2, (255, 255, 255))
+# b.swipe_up(3, (255, 255, 255))
+# b.swipe_up(4, (255, 255, 255))
+# b.swipe_up(5, (255, 255, 255))
+# b.swipe_up(6, (255, 255, 255))
 
 
 # def main():

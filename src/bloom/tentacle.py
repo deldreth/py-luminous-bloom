@@ -12,10 +12,11 @@ class Tentacle:
             'start': (n * self.__l) - self.__l,
             'end': n * self.__l - 1
         }
+        # print(self.__dims['start'])
 
     def __iter__(self):
         p = self.__dims['start']
-        while p < self.__dims['end']:
+        while p <= self.__dims['end']:
             yield p
             p += 1
 
@@ -23,11 +24,12 @@ class Tentacle:
         return self.__n
 
     def dims(self):
-        return self.__dims
+        return (self.__dims['start'], self.__dims['end'])
 
     def set(self, pixels, red, green, blue):
+        print(self.__dims['start'], self.__dims['end'])
         pixels[self.__dims['start']:self.__dims['end']] = [
-            (red, green, blue) for x in range(self.__l)]
+            (red, green, blue) for _ in range(self.__l)]
 
         return pixels
 

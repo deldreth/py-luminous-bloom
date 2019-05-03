@@ -2,6 +2,13 @@
 
 An Ignite! granted funded project.
 
+## Todo:
+
+- [ ] Gamma corrected color wheel func
+- [ ] All tentacles swipe up
+- [ ] All tentacles fill up
+- [ ] All tentacles strobe up
+
 ## Setup
 
 This project uses neopixels, fadecandy, and opc.

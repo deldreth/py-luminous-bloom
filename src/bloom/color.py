@@ -1,5 +1,17 @@
 #!/usr/bin/env python
 
+from colour import Color
+
+
+class Colors(Color):
+    def __init__(self, color=None,
+                 pick_for=None):
+        super().__init__(color, pick_for)
+
+    def get_rgb(self):
+        red, green, blue = super().get_rgb()
+        return (red * 255, green * 255, blue * 255)
+
 
 def wheel(value):
     """ Given 0-255, make an rgb color with gamma correction """

@@ -1,17 +1,18 @@
-#!/usr/bin/python
-
-from time import sleep
-
-from .tentacle import Tentacle
-from .color import wheel
+#!/usr/bin/env python
 
 import opc
 import math
+import copy
+from time import sleep
+
+
+from .tentacle import Tentacle
+from .color import wheel, Colors
 
 
 class LuminousBloom(object):
     __l = 64
-    total_pixels = 384
+    total_pixels = 385
     tentacles = {
         1: Tentacle(1),
         2: Tentacle(2),
@@ -53,10 +54,29 @@ class LuminousBloom(object):
                 self.put(t, rgb=wheel(color))
                 self.write_pixels(tsleep)
 
-    def multi_swipe_up(self, tentacles=[1, 2, 3, 4, 5, 6], color=(255, 255, 255), tsleep=0.01):
+    def multi_swipe_up(self, tentacles=[1, 2, 3, 4, 5, 6], color=Colors("purple"), tsleep=0.01):
         for p in range(self.__l):
             for t in tentacles:
                 start, _ = self.tentacles[t].dims()
-                self.pixels[start + p] = color
+                self.pixels[start + p] = color.rgb
+
+            self.write_pixels(tsleep)
+
+    def swipe_blob(self, tentacles=[1, 2, 3, 4, 5, 6], color=Colors("purple"), tsleep=0.01):
+        colors = []
+        copy_color = color
+        n = 10
+        for c in range(n):
+            copy_color.luminance = c / n
+            colors.append(copy_color.rgb)
+
+        for p in range(self.__l):
+            for t in tentacles:
+                start, end = self.tentacles[t].dims()
+                for i, c in enumerate(colors):
+                    ref = start - p - i
+                    if ref < self.total_pixels:
+                        # if start <= ref <= end:
+                        self.pixels[ref] = c
 
             self.write_pixels(tsleep)

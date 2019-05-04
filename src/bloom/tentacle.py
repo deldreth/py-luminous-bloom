@@ -2,7 +2,7 @@
 
 
 class Tentacle:
-    __l = 64
+    __l = 64  # Pixel length
 
     def __init__(self, n):
         self.__n = n  # Tentacle number
@@ -12,7 +12,6 @@ class Tentacle:
             'start': (n * self.__l) - self.__l,
             'end': n * self.__l - 1
         }
-        # print(self.__dims['start'])
 
     def __iter__(self):
         p = self.__dims['start']
@@ -27,7 +26,6 @@ class Tentacle:
         return (self.__dims['start'], self.__dims['end'])
 
     def set(self, pixels, red, green, blue):
-        print(self.__dims['start'], self.__dims['end'])
         pixels[self.__dims['start']:self.__dims['end']] = [
             (red, green, blue) for _ in range(self.__l)]
 
@@ -35,3 +33,7 @@ class Tentacle:
 
     def get(self, pixels):
         return pixels[self.__dims['start']:self.__dims['end']]
+
+    def contains(self, p):
+        """ Returns True if a pixels exists within its dims """
+        return self.__dims['start'] <= p <= self.__dims['end']

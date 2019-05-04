@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+from enum import Enum
 import opc
 import math
 import copy
@@ -7,7 +8,12 @@ from time import sleep
 
 
 from .tentacle import Tentacle
-from .color import wheel, Colors
+from .color import wheel, range_or_luminance, Colors
+
+
+class Direction(Enum):
+    UP = "up"
+    DOWN = "down"
 
 
 class LuminousBloom(object):
@@ -32,6 +38,17 @@ class LuminousBloom(object):
         self.client.put_pixels(self.pixels, 0)
         sleep(tsleep)
 
+    def end_test(self):
+        for t in self.tentacles:
+            start, end = self.tentacles[t].dims()
+            self.pixels[start] = Colors("purple").rgb
+            self.pixels[end] = Colors("blue").rgb
+
+            self.pixels[start+5] = Colors("purple").rgb
+            # self.pixels[end+5] = Colors("blue").rgb
+
+        self.write_pixels()
+
     def put(self, t, red=0, green=0, blue=0, rgb=(0, 0, 0)):
         if rgb > (0, 0, 0):
             red, green, blue = rgb
@@ -54,29 +71,40 @@ class LuminousBloom(object):
                 self.put(t, rgb=wheel(color))
                 self.write_pixels(tsleep)
 
-    def multi_swipe_up(self, tentacles=[1, 2, 3, 4, 5, 6], color=Colors("purple"), tsleep=0.01):
-        for p in range(self.__l):
+    def swipe(self, tentacles=[1, 2, 3, 4, 5, 6],
+              color=Colors("purple"), direction=Direction.UP, tsleep=0.01):
+        rng = range(self.__l)
+
+        if direction is Direction.DOWN:
+            rng = reversed(rng)
+
+        for p in rng:
             for t in tentacles:
                 start, _ = self.tentacles[t].dims()
                 self.pixels[start + p] = color.rgb
 
             self.write_pixels(tsleep)
 
-    def swipe_blob(self, tentacles=[1, 2, 3, 4, 5, 6], color=Colors("purple"), tsleep=0.01):
-        colors = []
-        copy_color = color
-        n = 10
-        for c in range(n):
-            copy_color.luminance = c / n
-            colors.append(copy_color.rgb)
+    def swipe_blob(self, l=64, tentacles=[1, 2, 3, 4, 5, 6],
+                   color=Colors("purple"), direction=Direction.UP, tsleep=0.01):
+        colors = range_or_luminance(color, l)
 
-        for p in range(self.__l):
-            for t in tentacles:
-                start, end = self.tentacles[t].dims()
-                for i, c in enumerate(colors):
-                    ref = start - p - i
-                    if ref < self.total_pixels:
-                        # if start <= ref <= end:
-                        self.pixels[ref] = c
+        rng = range(l * -1, self.__l + l)
+
+        if direction is Direction.DOWN:
+            rng = reversed(rng)
+
+        for p in rng:
+            for i, c in enumerate(colors):
+                if direction is Direction.DOWN:
+                    i *= -1
+
+                for t in tentacles:
+                    tentacle = self.tentacles[t]
+                    start, _ = tentacle.dims()
+
+                    pixel = start + p + i
+                    if tentacle.contains(pixel):
+                        self.pixels[pixel] = c
 
             self.write_pixels(tsleep)

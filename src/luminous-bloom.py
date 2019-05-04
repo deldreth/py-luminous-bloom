@@ -1,16 +1,50 @@
 #!/usr/bin/env python
 
+import random
 from multiprocessing import Process
 
-from bloom.bloom import LuminousBloom
+from bloom.bloom import LuminousBloom, Direction
 from bloom.color import Colors
 
+colors = [Colors("blue"), Colors("purple"), Colors("green")]
 b = LuminousBloom()
-b.swipe_blob(tentacles=[1, 3, 5])
-b.swipe_blob(tentacles=[2, 4, 6], color=Colors("blue"))
-b.swipe_blob(tentacles=[1, 3, 5])
-# b.multi_swipe_up([1, 3, 5], (255, 0, 0))
-# b.multi_swipe_up([2, 4, 6], (0, 255, 0))
+
+# b.swirl()
+
+# for r in range(6):
+#     b.swipe_blob(l=8, tentacles=[r + 1], tsleep=0.01, color=colors[r % 3])
+#     b.swipe_blob(
+#         tentacles=[r + 1], color=colors[r % 3],
+#         tsleep=0, direction=Direction.DOWN)
+
+# b.swipe_blob(tentacles=[1, 3, 5], direction=Direction.DOWN)
+# b.swipe_blob(tentacles=[2, 4, 6], direction=Direction.UP)
+
+# red = Colors("purple")
+# orange = Colors("orange")
+# colors = list(red.range_to(orange, 50))
+
+# for r in range(50):
+#     b.swipe_blob(tsleep=0.001, color=colors[r])
+# b.swipe_blob(tentacles=[1, 2], tsleep=0.001)
+# b.swipe_blob(tentacles=[2, 3], tsleep=0.001)
+# b.swipe_blob(tentacles=[3, 4], tsleep=0.001)
+# b.swipe_blob(tentacles=[4, 5], tsleep=0.001)
+# b.swipe_blob(tentacles=[5, 6], tsleep=0.001)
+# b.swipe_blob(tentacles=[6, 1], tsleep=0.001)
+
+# for c in Colors("blue").range_to(Colors("white"), 64):
+#     b.swipe_blob(l=64, tsleep=0, color=c)
+
+# colors = list(Colors("blue").range_to(Colors("white"), 64))
+# b.swipe_blob(l=len(colors), tsleep=0.01, color=colors)
+# b.swipe_blob(l=len(colors), tsleep=0.01, color=colors)
+# b.swipe_blob(l=len(colors), tsleep=0.01, color=colors)
+
+
+# b.swipe_blob(tentacles=[2, 4, 6], color=Colors("blue"))
+# b.swipe([1, 3, 5], Colors("red"))
+# b.swipe([2, 4, 6], Colors("blue"), Direction.DOWN)
 # b.rainbow_rotate()
 # b.swipe_up(1, (255, 255, 255))
 # b.swipe_up(2, (255, 255, 255))
@@ -19,7 +53,7 @@ b.swipe_blob(tentacles=[1, 3, 5])
 # b.swipe_up(5, (255, 255, 255))
 # b.swipe_up(6, (255, 255, 255))
 
-
+# Process example
 # def main():
 #     x = 0
 #     while True:

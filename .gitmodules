@@ -1,0 +1,3 @@
+[submodule "external/openpixelcontrol"]
+	path = external/openpixelcontrol
+	url = https://github.com/zestyping/openpixelcontrol

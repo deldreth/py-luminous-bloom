@@ -58,5 +58,5 @@ if __name__ == '__main__':
     b = LuminousBloom()
 
     colors = Colors("blue").range_to(Colors("purple"), 8)
-    b.stripe(color=list(colors))
+    # b.stripe(color=list(colors))
     b.swirl(color=Colors("white"))

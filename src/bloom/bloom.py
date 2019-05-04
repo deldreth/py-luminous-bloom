@@ -102,7 +102,7 @@ class LuminousBloom(object):
             self.write_pixels(tsleep)
 
     def stripe(self, loops=8, length=8, step=1, tentacles=[1, 2, 3, 4, 5, 6],
-               color=Colors("purple"), direction=Direction.UP, tsleep=0.01):
+               color=Colors("purple"), direction=Direction.UP, tsleep=60 / 120):
         pattern = Pattern(length, color)
 
         if direction is Direction.DOWN:
@@ -117,7 +117,7 @@ class LuminousBloom(object):
             self.write_pixels(0.1)
 
     def swirl(self, loops=7, length=8, step=3, tentacles=[1, 2, 3, 4, 5, 6],
-              color=Colors("purple"), direction=Direction.UP, tsleep=0.1):
+              color=Colors("purple"), direction=Direction.UP, tsleep=4 / 120):
         pattern = Pattern(length, color)
 
         if direction is Direction.DOWN:

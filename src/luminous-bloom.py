@@ -6,11 +6,6 @@ from multiprocessing import Process
 from bloom.bloom import LuminousBloom, Direction
 from bloom.color import Colors
 
-colors = [Colors("blue"), Colors("purple"), Colors("green")]
-b = LuminousBloom()
-
-# b.swirl()
-
 # for r in range(6):
 #     b.swipe_blob(l=8, tentacles=[r + 1], tsleep=0.01, color=colors[r % 3])
 #     b.swipe_blob(
@@ -46,12 +41,6 @@ b = LuminousBloom()
 # b.swipe([1, 3, 5], Colors("red"))
 # b.swipe([2, 4, 6], Colors("blue"), Direction.DOWN)
 # b.rainbow_rotate()
-# b.swipe_up(1, (255, 255, 255))
-# b.swipe_up(2, (255, 255, 255))
-# b.swipe_up(3, (255, 255, 255))
-# b.swipe_up(4, (255, 255, 255))
-# b.swipe_up(5, (255, 255, 255))
-# b.swipe_up(6, (255, 255, 255))
 
 # Process example
 # def main():
@@ -61,7 +50,13 @@ b = LuminousBloom()
 #         x += 1
 
 
-# if __name__ == '__main__':
-#     p = Process(target=main)
-#     p.start()
-#     p.join()
+if __name__ == '__main__':
+    # p = Process(target=main)
+    # p.start()
+    # p.join()
+
+    b = LuminousBloom()
+
+    colors = Colors("blue").range_to(Colors("purple"), 8)
+    b.stripe(color=list(colors))
+    b.swirl(color=Colors("white"))

@@ -23,9 +23,19 @@ This project uses neopixels, fadecandy, and opc.
 
 ### Development
 
+#### Clone with Externals
+
+This repo includes a submodule: https://github.com/zestyping/openpixelcontrol
+
+When cloning be sure to:
+
+```
+git clone --recursive
+```
+
 #### OPC (OpenPixelControl)
 
-Clone https://github.com/zestyping/openpixelcontrol and follow setup instructions. If using macOS ensure that CLI tools are accessible.
+If using macOS ensure that CLI tools are accessible.
 
 ```
 $ cd external/openpixelcontrol

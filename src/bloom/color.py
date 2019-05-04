@@ -10,6 +10,9 @@ class Colors(Color):
         for k, v in kwargs.items():
             setattr(self, k, v)
 
+    def __repr__(self):
+        return str(self.rgb)
+
     def get_rgb(self):
         red, green, blue = super().get_rgb()
         return (round(red * 255), round(green * 255), round(blue * 255))

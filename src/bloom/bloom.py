@@ -9,6 +9,7 @@ from time import sleep
 
 from .tentacle import Tentacle
 from .color import wheel, range_or_luminance, Colors
+from .pattern import Pattern
 
 
 class Direction(Enum):
@@ -18,6 +19,7 @@ class Direction(Enum):
 
 class LuminousBloom(object):
     __l = 64
+    __rng = range(__l)
     total_pixels = 385
     tentacles = {
         1: Tentacle(1),
@@ -54,16 +56,6 @@ class LuminousBloom(object):
             red, green, blue = rgb
 
         self.pixels = self.tentacles[t].set(self.pixels, red, green, blue)
-
-    def swipe_down(self, tentacle, color=(255, 255, 255), tsleep=0.01):
-        for t in reversed(self.tentacles[tentacle]):
-            self.pixels[t] = color
-            self.write_pixels(tsleep)
-
-    def swipe_up(self, tentacle, color=(255, 255, 255), tsleep=0.01):
-        for t in self.tentacles[tentacle]:
-            self.pixels[t] = color
-            self.write_pixels(tsleep)
 
     def rainbow_rotate(self, tsleep=0.1):
         for color in range(1, 250, 20):
@@ -106,5 +98,35 @@ class LuminousBloom(object):
                     pixel = start + p + i
                     if tentacle.contains(pixel):
                         self.pixels[pixel] = c
+
+            self.write_pixels(tsleep)
+
+    def stripe(self, loops=8, length=8, step=1, tentacles=[1, 2, 3, 4, 5, 6],
+               color=Colors("purple"), direction=Direction.UP, tsleep=0.01):
+        pattern = Pattern(length, color)
+
+        if direction is Direction.DOWN:
+            step *= -1
+
+        for _ in range(loops * length):
+            for key, t in self.tentacles.items():
+                if key in tentacles:
+                    self.pixels = t.set_pattern(self.pixels, pattern)
+
+            pattern.shift(step)
+            self.write_pixels(0.1)
+
+    def swirl(self, loops=7, length=8, step=3, tentacles=[1, 2, 3, 4, 5, 6],
+              color=Colors("purple"), direction=Direction.UP, tsleep=0.1):
+        pattern = Pattern(length, color)
+
+        if direction is Direction.DOWN:
+            step *= -1
+
+        for _ in self.__rng:
+            for key, t in self.tentacles.items():
+                if key in tentacles:
+                    self.pixels = t.set_pattern(self.pixels, pattern)
+                pattern.shift(step)
 
             self.write_pixels(tsleep)

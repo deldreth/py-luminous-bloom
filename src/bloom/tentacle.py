@@ -31,6 +31,11 @@ class Tentacle:
 
         return pixels
 
+    def set_pattern(self, pixels, pattern):
+        for p, item in enumerate(range(self.__dims['start'], self.__dims['end'] + 1)):
+            pixels[item] = pattern[p]
+        return pixels
+
     def get(self, pixels):
         return pixels[self.__dims['start']:self.__dims['end']]
 

@@ -8,37 +8,43 @@ class Tentacle:
         self.__n = n  # Tentacle number
 
         # Tentacle dimensions, each being 64 pixels in length
-        self.__dims = {
-            'start': (n * self.__l) - self.__l,
-            'end': n * self.__l - 1
-        }
+        self.start = (n * self.__l) - self.__l
+        self.end = n * self.__l
 
     def __iter__(self):
-        p = self.__dims['start']
-        while p <= self.__dims['end']:
+        p = self.start
+        while p <= self.end:
             yield p
             p += 1
+
+    def __repr__(self):
+        return "<Tentacle {}>".format(self.__n)
 
     def which(self):
         return self.__n
 
     def dims(self):
-        return (self.__dims['start'], self.__dims['end'])
+        return (self.start, self.end)
 
     def set(self, pixels, red, green, blue):
-        pixels[self.__dims['start']:self.__dims['end']] = [
+        pixels[self.start:self.end] = [
             (red, green, blue) for _ in range(self.__l)]
 
         return pixels
 
+    def colorize(self, pixels, rgb):
+        pixels[self.start:self.end] = [rgb for _ in range(self.__l)]
+        return pixels
+
     def set_pattern(self, pixels, pattern):
-        for p, item in enumerate(range(self.__dims['start'], self.__dims['end'] + 1)):
+        # pixels[self.start:self.end] = [pattern[p] for p in range(self.__l)]
+        for p, item in enumerate(range(self.start, self.end)):
             pixels[item] = pattern[p]
         return pixels
 
     def get(self, pixels):
-        return pixels[self.__dims['start']:self.__dims['end']]
+        return pixels[self.start:self.end]
 
     def contains(self, p):
         """ Returns True if a pixels exists within its dims """
-        return self.__dims['start'] <= p <= self.__dims['end']
+        return self.start <= p < self.end

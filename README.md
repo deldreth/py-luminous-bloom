@@ -8,10 +8,13 @@ An Ignite! granted funded project.
 
 - [x] Gamma corrected color wheel func
 - [x] All tentacles swipe up
-- [ ] All tentacles fill up
+- [x] All tentacles fill up
+- [ ] Tentacles can receive repeating patterns
 - [ ] All tentacles strobe up
-- [ ] Stripe with direction
+- [x] Stripe with direction
 - [ ] Swirl with direction
+- [x] Any tentacle fades
+- [x] Different tentacles fade
 
 ## Requirements
 

@@ -172,3 +172,41 @@ class LuminousBloom(object):
                 pattern.shift(step)
 
             self.write_pixels(tsleep)
+
+    def fade(self, colors, tentacles=[1, 2, 3, 4, 5, 6], tsleep=1/8):
+        for c in colors:
+            for t in tentacles:
+                for p in self.tentacles[t]:
+                    self.pixels[p] = c.rgb
+
+            self.write_pixels(tsleep)
+
+    def fade_multi(self, colors, tentacles=[[1, 3, 5], [2, 4, 6]], rotate=False, tsleep=1/16):
+        """
+        fade_multi allows for multiple color generators to be traversed for any number of tentacles.
+
+        The list of color generators and the list of tentacle lists must have the same length.
+
+        rotate=True will force each tentacle to write in sequence instead of at the same time
+        """
+        if len(colors) is not len(tentacles):
+            raise Exception(
+                'fade_multi: colors and tentacles should be lists of the same length')
+
+        tentacle_colors = []
+        color = None
+        for ti, tlist in enumerate(tentacles):
+            # generators cannot be rolled back, list() traverses the generator
+            color = list(colors[ti])
+
+            for t in tlist:
+                tentacle_colors.append((self.tentacles[t], color))
+
+        for x in range(len(color)):
+            for tentacle, color in tentacle_colors:
+                self.pixels = tentacle.colorize(self.pixels, color[x].rgb)
+
+                if rotate is True:
+                    self.write_pixels(tsleep)
+            if rotate is False:
+                self.write_pixels(tsleep)

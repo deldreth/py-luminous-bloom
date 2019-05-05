@@ -15,6 +15,8 @@ from .pattern import Pattern
 class Direction(Enum):
     UP = "up"
     DOWN = "down"
+    LEFT = "left"
+    RIGHT = "right"
 
 
 class LuminousBloom(object):
@@ -63,6 +65,23 @@ class LuminousBloom(object):
                 self.put(t, rgb=wheel(color))
                 self.write_pixels(tsleep)
 
+    def rotate(self, color, loops=5, direction=Direction.RIGHT, tsleep=1/20):
+        color = range_or_luminance(color, 64)
+
+        tentacles = list(self.tentacles.items())
+        if direction is Direction.LEFT:
+            tentacles = list(reversed(tentacles))
+
+        for _ in range(loops):
+            for _, tentacle in tentacles:
+                self.pixels = [(0, 0, 0)] * self.total_pixels
+
+                for ic, c in enumerate(color):
+                    start, _ = tentacle.dims()
+                    self.pixels[start + ic] = c
+
+                self.write_pixels(tsleep)
+
     def swipe(self, tentacles=[1, 2, 3, 4, 5, 6],
               color=Colors("purple"), direction=Direction.UP, tsleep=0.01):
         rng = range(self.__l)
@@ -77,8 +96,7 @@ class LuminousBloom(object):
 
             self.write_pixels(tsleep)
 
-    def swipe_blob(self, l=64, tentacles=[1, 2, 3, 4, 5, 6],
-                   color=Colors("purple"), direction=Direction.UP, tsleep=0.01):
+    def swipe_blob(self, color, l=64, tentacles=[1, 2, 3, 4, 5, 6], direction=Direction.UP, tsleep=0.01):
         colors = range_or_luminance(color, l)
 
         rng = range(l * -1, self.__l + l)
@@ -101,8 +119,32 @@ class LuminousBloom(object):
 
             self.write_pixels(tsleep)
 
+    def swipe_pattern(self, colors, tentacles=[1, 2, 3, 4, 5, 6], direction=Direction.UP, tsleep=1/60):
+        length = len(colors)
+        pattern = Pattern(length, colors)
+
+        rng = range(length * -1, self.__l + length)
+
+        if direction is Direction.DOWN:
+            rng = reversed(rng)
+
+        for p in rng:
+            for i, c in enumerate(pattern):
+                if direction is Direction.DOWN:
+                    i *= -1
+
+                for t in tentacles:
+                    tentacle = self.tentacles[t]
+                    start, _ = tentacle.dims()
+
+                    pixel = start + p + i
+                    if tentacle.contains(pixel):
+                        self.pixels[pixel] = c
+
+            self.write_pixels(tsleep)
+
     def stripe(self, loops=8, length=8, step=1, tentacles=[1, 2, 3, 4, 5, 6],
-               color=Colors("purple"), direction=Direction.UP, tsleep=60 / 120):
+               color=Colors("purple"), direction=Direction.UP, tsleep=1 / 60):
         pattern = Pattern(length, color)
 
         if direction is Direction.DOWN:
@@ -114,10 +156,10 @@ class LuminousBloom(object):
                     self.pixels = t.set_pattern(self.pixels, pattern)
 
             pattern.shift(step)
-            self.write_pixels(0.1)
+            self.write_pixels(tsleep)
 
     def swirl(self, loops=7, length=8, step=3, tentacles=[1, 2, 3, 4, 5, 6],
-              color=Colors("purple"), direction=Direction.UP, tsleep=4 / 120):
+              color=Colors("purple"), direction=Direction.UP, tsleep=1 / 60):
         pattern = Pattern(length, color)
 
         if direction is Direction.DOWN:

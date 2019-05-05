@@ -22,7 +22,7 @@ class Pattern(deque):
     def __init__(self, l, color):
         whole = range(self.__l)
         steps = whole[0::l]
-        for index, item in enumerate(steps):
+        for index, _ in enumerate(steps):
             for p in range(l):
                 if index % 2:
                     self.append((0, 0, 0))

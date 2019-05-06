@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import types
 from collections import deque
 
 
@@ -34,3 +35,12 @@ class Pattern(deque):
 
     def shift(self, step=1):
         self.rotate(step)
+
+
+class Range(deque):
+    def __init__(self, color_range):
+        if isinstance(color_range, types.GeneratorType):
+            color_range = list(color_range)
+
+        for color in color_range:
+            self.append(color.rgb)

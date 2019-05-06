@@ -74,53 +74,85 @@ def animation_1(color1=Colors("MediumPurple"), color2=Colors("White"), scale=4):
             2, 4, 6], direction=Direction.DOWN)
 
 
+def animation_2(color1=Colors("Purple"), color2=(Colors("Lavender")), scale=5):
+    # Rotate each tentacle, coloring with a range and gradually increasing speed
+    color_range = list(color1.range_to(color2, 64))
+    for x in range(1, scale):
+        b.rotate(color_range, loops=x * scale, tsleep=1/10 / x)
+
+
+def animation_3(color1=Colors("Purple"), color2=(Colors("Lavender")), scale=4):
+    # Rotate each tentacle, coloring with a range and gradually increasing speed
+    # Change direction on cycle index modulo 2
+    color_range = list(color1.range_to(color2, 64))
+    for x in range(1, scale):
+        direction = Direction.RIGHT if x % 2 else Direction.LEFT
+        b.rotate(color_range, loops=x * scale,
+                 direction=direction, tsleep=1/10 / x)
+
+
 if __name__ == '__main__':
     b = LuminousBloom()
 
     # animation_1()
     # animation_1(Colors("SeaGreen"))
     # animation_1(Colors("LavenderBlush"))
+    # animation_1(Colors("Firebrick"), Colors("Goldenrod"))
 
-    colors = Colors("purple").range_to(Colors("green"), 8)
-    b.stripe(color=list(colors))
+    # animation_2()
+    # animation_2(Colors("Firebrick"), Colors("Goldenrod"))
+    # animation_2(Colors("Hotpink"), Colors("Deeppink"))
 
-    b.swipe_blob(color=Colors("green"))
+    # animation_3()
 
-    colors = [Colors(hex="#75DDDD"), Colors(hex="#84C7D0"), Colors(hex="#9297C4"),
-              Colors(hex="#9C68B7"), Colors(hex="#AA3E98"), Colors(hex="#E0B8D9")]
-    for i, c in enumerate(colors):
-        b.swipe_blob(l=64, color=c, tentacles=[i + 1], tsleep=1/512)
+    colors = list(Colors("Firebrick").range_to(Colors("Goldenrod"), 32)) + \
+        list(Colors("Goldenrod").range_to(Colors("Firebrick"), 32))
+    b.cycle(colors)
+    # b.cycle(Colors("Lavender").range_to(Colors("Purple"), 64))
+    # b.cycle(Colors("Lavender").range_to(Colors("Purple"), 64))
+    # b.cycle(Colors("Goldenrod").range_to(Colors("Hotpink"), 64))
+    # b.cycle(Colors("Hotpink").range_to(Colors("SeaGreen"), 64))
 
-    colors = list(Colors("red").range_to(Colors("blue"), 8))
-    b.swipe_pattern(colors)
-    b.swipe_pattern(colors, direction=Direction.DOWN)
+    # b.swirl(length=2, step=7, color=Colors("red"), tsleep=1/10)
 
-    for i, c in enumerate(colors):
-        b.swipe_blob(l=64, color=c, tsleep=1/512)
+    # colors = Colors("purple").range_to(Colors("green"), 8)
+    # b.stripe(color=list(colors))
 
-    b.swipe_blob(l=64, color=Colors("lavender"), tsleep=1/120)
+    # b.swipe_blob(color=Colors("green"))
 
-    b.rotate(Colors("lavender"))
-    b.rotate(Colors("lavender"), direction=Direction.LEFT)
+    # colors = [Colors(hex="#75DDDD"), Colors(hex="#84C7D0"), Colors(hex="#9297C4"),
+    #           Colors(hex="#9C68B7"), Colors(hex="#AA3E98"), Colors(hex="#E0B8D9")]
+    # for i, c in enumerate(colors):
+    #     b.swipe_blob(l=64, color=c, tentacles=[i + 1], tsleep=1/512)
 
-    b.rotate(list(Colors("red").range_to(Colors("blue"), 64)))
+    # colors = list(Colors("red").range_to(Colors("blue"), 8))
+    # b.swipe_pattern(colors)
+    # b.swipe_pattern(colors, direction=Direction.DOWN)
 
-    b.swirl(length=2, step=7, color=Colors("red"), tsleep=1/10)
+    # for i, c in enumerate(colors):
+    #     b.swipe_blob(l=64, color=c, tsleep=1/512)
 
-    colors = Colors("red").range_to(Colors("blue"), 8)
-    b.fade(colors)
+    # b.swipe_blob(l=64, color=Colors("lavender"), tsleep=1/120)
 
-    b.fade_multi(colors=[Colors("red").range_to(
-        Colors("blue"), 8), Colors("blue").range_to(Colors("red"), 8)])
+    # b.rotate(Colors("lavender"))
+    # b.rotate(Colors("lavender"), direction=Direction.LEFT)
 
-    b.fade_multi(colors=[Colors("plum").range_to(
-        Colors("turquoise"), 8), Colors("turquoise").range_to(Colors("black"), 8)], rotate=True, tsleep=1/15)
+    # b.rotate(list(Colors("red").range_to(Colors("blue"), 64)))
 
-    one_two = Colors("red").range_to(Colors("green"), 16)
-    three_four = Colors("green").range_to(Colors(web="blue"), 16)
-    five_six = Colors("blue").range_to(Colors("red"), 16)
-    b.fade_multi(colors=[one_two, three_four, five_six], tentacles=[
-                 [1, 2], [3, 4], [5, 6]], tsleep=1/15)
+    # colors = Colors("red").range_to(Colors("blue"), 8)
+    # b.fade(colors)
+
+    # b.fade_multi(colors=[Colors("red").range_to(
+    #     Colors("blue"), 8), Colors("blue").range_to(Colors("red"), 8)])
+
+    # b.fade_multi(colors=[Colors("plum").range_to(
+    #     Colors("turquoise"), 8), Colors("turquoise").range_to(Colors("black"), 8)], rotate=True, tsleep=1/15)
+
+    # one_two = Colors("red").range_to(Colors("green"), 16)
+    # three_four = Colors("green").range_to(Colors(web="blue"), 16)
+    # five_six = Colors("blue").range_to(Colors("red"), 16)
+    # b.fade_multi(colors=[one_two, three_four, five_six], tentacles=[
+    #              [1, 2], [3, 4], [5, 6]], tsleep=1/15)
 
     # p = Process(target=main)
     # p.start()

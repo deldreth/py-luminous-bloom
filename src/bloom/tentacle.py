@@ -36,6 +36,10 @@ class Tentacle:
         pixels[self.start:self.end] = [rgb for _ in range(self.__l)]
         return pixels
 
+    def patternize(self, pixels, colors):
+        pixels[self.start:self.end] = [c for c in colors]
+        return pixels
+
     def set_pattern(self, pixels, pattern):
         # pixels[self.start:self.end] = [pattern[p] for p in range(self.__l)]
         for p, item in enumerate(range(self.start, self.end)):

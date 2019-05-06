@@ -9,7 +9,7 @@ from time import sleep
 
 from .tentacle import Tentacle
 from .color import wheel, range_or_luminance, Colors
-from .pattern import Pattern
+from .pattern import Pattern, Range
 
 
 class Direction(Enum):
@@ -210,3 +210,28 @@ class LuminousBloom(object):
                     self.write_pixels(tsleep)
             if rotate is False:
                 self.write_pixels(tsleep)
+
+    def cycle(self, colors, tentacles=[1, 2, 3, 4, 5, 6], loops=2, direction=Direction.UP, tsleep=1/60):
+        color_range = Range(colors)
+
+        # Transition the color range before the rotations
+        for c, color in enumerate(color_range):
+            for t in tentacles:
+                start, end = self.tentacles[t].dims()
+                if direction is Direction.DOWN:
+                    self.pixels[end - 1 - c] = color
+                else:
+                    self.pixels[start + c] = color
+
+            self.write_pixels(tsleep)
+
+        for _ in range(loops):
+            for _ in range(len(color_range)):
+                for t in tentacles:
+                    self.pixels = self.tentacles[t].patternize(
+                        self.pixels, color_range)
+
+                self.write_pixels(tsleep)
+
+                rotation = -1 if direction is Direction.DOWN else 1
+                color_range.rotate(rotation)

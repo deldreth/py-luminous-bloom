@@ -2,8 +2,7 @@
 
 from enum import Enum
 import opc
-import math
-import copy
+import random
 from time import sleep
 
 
@@ -82,8 +81,7 @@ class LuminousBloom(object):
 
                 self.write_pixels(tsleep)
 
-    def swipe(self, tentacles=[1, 2, 3, 4, 5, 6],
-              color=Colors("purple"), direction=Direction.UP, tsleep=0.01):
+    def swipe(self, color=Colors("purple"), tentacles=[1, 2, 3, 4, 5, 6], direction=Direction.UP, tsleep=0.01):
         rng = range(self.__l)
 
         if direction is Direction.DOWN:
@@ -214,17 +212,6 @@ class LuminousBloom(object):
     def cycle(self, colors, tentacles=[1, 2, 3, 4, 5, 6], loops=2, direction=Direction.UP, tsleep=1/60):
         color_range = Range(colors)
 
-        # Transition the color range before the rotations
-        for c, color in enumerate(color_range):
-            for t in tentacles:
-                start, end = self.tentacles[t].dims()
-                if direction is Direction.DOWN:
-                    self.pixels[end - 1 - c] = color
-                else:
-                    self.pixels[start + c] = color
-
-            self.write_pixels(tsleep)
-
         for _ in range(loops):
             for _ in range(len(color_range)):
                 for t in tentacles:
@@ -235,3 +222,26 @@ class LuminousBloom(object):
 
                 rotation = -1 if direction is Direction.DOWN else 1
                 color_range.rotate(rotation)
+
+    def cycle_fade(self, colors, tentacles=[1, 2, 3, 4, 5, 6], loops=2, direction=Direction.UP, tsleep=1/60):
+        # Transition the color range before the rotations
+        for c, color in enumerate(Range(colors)):
+            for t in tentacles:
+                start, end = self.tentacles[t].dims()
+                if direction is Direction.DOWN:
+                    self.pixels[end - 1 - c] = color
+                else:
+                    self.pixels[start + c] = color
+
+            self.write_pixels(tsleep)
+
+        self.cycle(colors, tentacles, loops, direction, tsleep)
+
+    def sparkle(self, color, tentacles=[1, 2, 3, 4, 5, 6], maximum=50, tsleep=1/15):
+        npixels = []
+        for _ in range(maximum):
+            npixels.append(random.randint(1, self.total_pixels - 1))
+
+        for n in npixels:
+            self.pixels[n] = color.rgb
+            self.write_pixels(tsleep)

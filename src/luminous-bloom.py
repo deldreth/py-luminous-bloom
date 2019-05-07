@@ -91,6 +91,18 @@ def animation_3(color1=Colors("Purple"), color2=(Colors("Lavender")), scale=4):
                  direction=direction, tsleep=1/10 / x)
 
 
+def animation_4(color1, color2, scale=6):
+    # Create a color range (length 64) between two colors
+    # Cycle all tentacles of that color for "scale" times
+    colors = list(color1.range_to(color2, 32)) + \
+        list(color2.range_to(color1, 32))
+    black = Colors("Black")
+
+    for x in range(1, scale):
+        b.cycle_fade(colors, loops=x, tsleep=1/120 / x)
+        b.swipe(black, direction=Direction.DOWN, tsleep=1/60 / x)
+
+
 if __name__ == '__main__':
     b = LuminousBloom()
 
@@ -105,9 +117,13 @@ if __name__ == '__main__':
 
     # animation_3()
 
-    colors = list(Colors("Firebrick").range_to(Colors("Goldenrod"), 32)) + \
-        list(Colors("Goldenrod").range_to(Colors("Firebrick"), 32))
-    b.cycle(colors)
+    # animation_4(Colors("Lavender"), Colors("Purple"))
+
+    b.sparkle(Colors("Hotpink"))
+    b.sparkle(Colors("SeaGreen"))
+    b.sparkle(Colors("Purple"))
+    b.sparkle(Colors("Goldenrod"))
+
     # b.cycle(Colors("Lavender").range_to(Colors("Purple"), 64))
     # b.cycle(Colors("Lavender").range_to(Colors("Purple"), 64))
     # b.cycle(Colors("Goldenrod").range_to(Colors("Hotpink"), 64))

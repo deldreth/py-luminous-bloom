@@ -17,7 +17,12 @@ An Ignite! granted funded project.
 - [x] Different tentacles fade
 - [x] Sparkle
 - [ ] Shimmer
+- [x] Pulsing shimmer
 - [x] Ripple
+
+### Timing:
+
+- [ ] Effects expressed in seconds/minutes
 
 ## Requirements
 

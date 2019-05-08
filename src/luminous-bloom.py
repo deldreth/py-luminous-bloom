@@ -103,12 +103,18 @@ def animation_4(color1, color2, scale=6):
         b.swipe(black, direction=Direction.DOWN, tsleep=1/60 / x)
 
 
-def animation_5(color):
-    tlist = [1, 2, 3, 4, 5, 6]
-    random.shuffle(tlist)
+def animation_5(color1, color2):
+    for _ in range(64):
+        # seed = random.randint(0, 63)
+        # b.shimmer_pulse(color1, tentacles=[1, 3, 5], duration=0.5)
 
-    for t in tlist:
-        b.ripple(color, tentacles=[t], duration=2)
+        # b.shimmer_pulse(color2, tentacles=[2, 4, 6], duration=0.5)
+
+
+        duration = 1
+        b.ripple(color2, seed=63, duration=duration)
+        b.ripple(Colors("Seagreen"), duration=duration)
+        b.ripple(color1, seed=0, duration=duration)
 
 
 if __name__ == '__main__':
@@ -132,7 +138,7 @@ if __name__ == '__main__':
     # b.sparkle(Colors("Purple"))
     # b.sparkle(Colors("Goldenrod"))
 
-    animation_5(Colors("Goldenrod"))
+    animation_5(Colors("Goldenrod"), Colors("MediumPurple"))
 
     # b.cycle(Colors("Lavender").range_to(Colors("Purple"), 64))
     # b.cycle(Colors("Lavender").range_to(Colors("Purple"), 64))

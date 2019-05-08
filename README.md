@@ -12,9 +12,12 @@ An Ignite! granted funded project.
 - [ ] Tentacles can receive repeating patterns
 - [ ] All tentacles strobe up
 - [x] Stripe with direction
-- [ ] Swirl with direction
+- [x] Swirl with direction
 - [x] Any tentacle fades
 - [x] Different tentacles fade
+- [x] Sparkle
+- [ ] Shimmer
+- [x] Ripple
 
 ## Requirements
 

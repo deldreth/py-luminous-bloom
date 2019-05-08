@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 
-from enum import Enum
 import opc
 import random
-from time import sleep
+import math
+from enum import Enum
+from time import sleep, perf_counter
 
 
 from .tentacle import Tentacle
@@ -245,3 +246,48 @@ class LuminousBloom(object):
         for n in npixels:
             self.pixels[n] = color.rgb
             self.write_pixels(tsleep)
+
+    def ripple(self, color, seed=32, tentacles=[1, 2, 3, 4, 5, 6], fade_out=0.75, duration=4):
+        def fade(step): return pow(fade_out, step)
+
+        def wave(tentacle, step, point, adjust):
+            if step >= point:
+                first = tentacle.start + seed + step - point
+                last = tentacle.start + seed - step + point
+
+                if tentacle.contains(first):
+                    self.pixels[first] = color.rgb
+
+                if tentacle.contains(last):
+                    self.pixels[last] = color.rgb
+
+                color.luminance = fade(step)
+
+        # Once the step is greater than point began to adjust
+        def settle(tentacle, step, reset, point):
+            if step > point:
+                first = tentacle.start + seed + reset
+                last = tentacle.start + seed - reset
+
+                if tentacle.contains(first):
+                    self.pixels[first] = (0, 0, 0)
+
+                if tentacle.contains(last):
+                    self.pixels[last] = (0, 0, 0)
+
+        time_start = perf_counter()
+        step = 0
+        reset = 0
+        while perf_counter() - time_start <= duration:
+            for t in tentacles:
+                wave(self.tentacles[t], step, 0, 0)
+                wave(self.tentacles[t], step, 4, 2)
+                # wave(self.tentacles[t], step, 10, 3)
+                settle(self.tentacles[t], step, reset, 11)
+
+            if step > 11:
+                reset += 1
+
+            step += 1
+
+            self.write_pixels(duration / 120)

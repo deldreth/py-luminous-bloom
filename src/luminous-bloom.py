@@ -103,6 +103,14 @@ def animation_4(color1, color2, scale=6):
         b.swipe(black, direction=Direction.DOWN, tsleep=1/60 / x)
 
 
+def animation_5(color):
+    tlist = [1, 2, 3, 4, 5, 6]
+    random.shuffle(tlist)
+
+    for t in tlist:
+        b.ripple(color, tentacles=[t], duration=2)
+
+
 if __name__ == '__main__':
     b = LuminousBloom()
 
@@ -119,10 +127,12 @@ if __name__ == '__main__':
 
     # animation_4(Colors("Lavender"), Colors("Purple"))
 
-    b.sparkle(Colors("Hotpink"))
-    b.sparkle(Colors("SeaGreen"))
-    b.sparkle(Colors("Purple"))
-    b.sparkle(Colors("Goldenrod"))
+    # b.sparkle(Colors("Hotpink"))
+    # b.sparkle(Colors("SeaGreen"))
+    # b.sparkle(Colors("Purple"))
+    # b.sparkle(Colors("Goldenrod"))
+
+    animation_5(Colors("Goldenrod"))
 
     # b.cycle(Colors("Lavender").range_to(Colors("Purple"), 64))
     # b.cycle(Colors("Lavender").range_to(Colors("Purple"), 64))

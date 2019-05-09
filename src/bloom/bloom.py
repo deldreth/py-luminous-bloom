@@ -21,7 +21,6 @@ class Direction(Enum):
 
 class LuminousBloom(object):
     __l = 64
-    __rng = range(__l)
     total_pixels = 385
     tentacles = {
         1: Tentacle(1),
@@ -82,7 +81,7 @@ class LuminousBloom(object):
 
                 self.write_pixels(tsleep)
 
-    def swipe(self, color=Colors("purple"), tentacles=[1, 2, 3, 4, 5, 6], direction=Direction.UP, tsleep=0.01):
+    def swipe(self, color, tentacles=[1, 2, 3, 4, 5, 6], direction=Direction.UP, duration=1):
         rng = range(self.__l)
 
         if direction is Direction.DOWN:
@@ -93,9 +92,9 @@ class LuminousBloom(object):
                 start, _ = self.tentacles[t].dims()
                 self.pixels[start + p] = color.rgb
 
-            self.write_pixels(tsleep)
+            self.write_pixels(duration / 120)
 
-    def swipe_blob(self, color, l=64, tentacles=[1, 2, 3, 4, 5, 6], direction=Direction.UP, tsleep=0.01):
+    def swipe_blob(self, color, l=64, tentacles=[1, 2, 3, 4, 5, 6], direction=Direction.UP, duration=1):
         colors = range_or_luminance(color, l)
 
         rng = range(l * -1, self.__l + l)
@@ -116,9 +115,9 @@ class LuminousBloom(object):
                     if tentacle.contains(pixel):
                         self.pixels[pixel] = c
 
-            self.write_pixels(tsleep)
+            self.write_pixels(duration / 120)
 
-    def swipe_pattern(self, colors, tentacles=[1, 2, 3, 4, 5, 6], direction=Direction.UP, tsleep=1/60):
+    def swipe_pattern(self, colors, tentacles=[1, 2, 3, 4, 5, 6], direction=Direction.UP, duration=2):
         length = len(colors)
         pattern = Pattern(length, colors)
 
@@ -140,53 +139,64 @@ class LuminousBloom(object):
                     if tentacle.contains(pixel):
                         self.pixels[pixel] = c
 
-            self.write_pixels(tsleep)
+            self.write_pixels(duration / 120)
 
-    def stripe(self, loops=8, length=8, step=1, tentacles=[1, 2, 3, 4, 5, 6],
-               color=Colors("purple"), direction=Direction.UP, tsleep=1 / 60):
-        pattern = Pattern(length, color)
+    def stripe(self, color_or_range, length=8, step=2, tentacles=[1, 2, 3, 4, 5, 6], direction=Direction.UP, duration=1):
+        """Patternize any tentacle with a color range separated by black of the same length
+
+        color_or_range -- A single color or range of colors
+        length -- The length of the stripe. If color_or_range is a range of colors then length must be equal to its length.
+        step -- The number of pixels to adjust the pattern during animation
+        """
+        pattern = Pattern(length, color_or_range)
 
         if direction is Direction.DOWN:
             step *= -1
 
-        for _ in range(loops * length):
-            for key, t in self.tentacles.items():
-                if key in tentacles:
-                    self.pixels = t.set_pattern(self.pixels, pattern)
+        start_time = perf_counter()
+
+        while perf_counter() - start_time < duration:
+            for t in tentacles:
+                self.pixels = self.tentacles[t].patternize(
+                    self.pixels, pattern)
 
             pattern.shift(step)
-            self.write_pixels(tsleep)
 
-    def swirl(self, loops=7, length=8, step=3, tentacles=[1, 2, 3, 4, 5, 6],
-              color=Colors("purple"), direction=Direction.UP, tsleep=1 / 60):
-        pattern = Pattern(length, color)
+            self.write_pixels(duration / 120)
 
-        if direction is Direction.DOWN:
-            step *= -1
+    # def swirl(self, color, length=8, step=1, tentacles=[1, 2, 3, 4, 5, 6], direction=Direction.UP, duration=1):
+    #     pattern = Pattern(length, color)
 
-        for _ in self.__rng:
-            for key, t in self.tentacles.items():
-                if key in tentacles:
-                    self.pixels = t.set_pattern(self.pixels, pattern)
-                pattern.shift(step)
+    #     if direction is Direction.DOWN:
+    #         step *= -1
 
-            self.write_pixels(tsleep)
+    #     for _ in range(self.__l):
+    #         for key, t in self.tentacles.items():
+    #             if key in tentacles:
+    #                 self.pixels = t.set_pattern(self.pixels, pattern)
+    #             pattern.shift(step)
 
-    def fade(self, colors, tentacles=[1, 2, 3, 4, 5, 6], tsleep=1/8):
+    #         self.write_pixels(duration / 120)
+
+    def fade(self, colors, tentacles=[1, 2, 3, 4, 5, 6], duration=1):
+        """Fade any tentacle through a color range
+
+        colors -- A range of colors
+        """
         for c in colors:
             for t in tentacles:
                 for p in self.tentacles[t]:
                     self.pixels[p] = c.rgb
 
-            self.write_pixels(tsleep)
+            self.write_pixels(duration / 120)
 
-    def fade_multi(self, colors, tentacles=[[1, 3, 5], [2, 4, 6]], rotate=False, tsleep=1/16):
+    def fade_multi(self, colors, tentacles=[[1, 3, 5], [2, 4, 6]], duration=1):
         """
         fade_multi allows for multiple color generators to be traversed for any number of tentacles.
 
         The list of color generators and the list of tentacle lists must have the same length.
-
-        rotate=True will force each tentacle to write in sequence instead of at the same time
+        colors -- List of lists containing color ranges [[Color, Color, Color, ...], [Color, Color, Color, ...]]
+        tentacles -- List of lists containing tentacle maps [[Tentacle, Tentacle, Tentacle, ...], [Tentacle, Tentacle, Tentacle, ...]]
         """
         if len(colors) is not len(tentacles):
             raise Exception(
@@ -205,12 +215,14 @@ class LuminousBloom(object):
             for tentacle, color in tentacle_colors:
                 self.pixels = tentacle.colorize(self.pixels, color[x].rgb)
 
-                if rotate is True:
-                    self.write_pixels(tsleep)
-            if rotate is False:
-                self.write_pixels(tsleep)
+            self.write_pixels(duration / 120)
 
-    def cycle(self, colors, tentacles=[1, 2, 3, 4, 5, 6], loops=2, direction=Direction.UP, tsleep=1/60):
+    def cycle(self, colors, tentacles=[1, 2, 3, 4, 5, 6], loops=1, direction=Direction.UP, duration=1):
+        """
+        Cycle patternizes any tentacle with a range of colors. For the best results the length of the 
+        color range should be 64. However if the color range is less than 64, black will be appended
+        to the end of the color range.
+        """
         color_range = Range(colors)
 
         for _ in range(loops):
@@ -219,12 +231,16 @@ class LuminousBloom(object):
                     self.pixels = self.tentacles[t].patternize(
                         self.pixels, color_range)
 
-                self.write_pixels(tsleep)
-
                 rotation = -1 if direction is Direction.DOWN else 1
                 color_range.rotate(rotation)
 
-    def cycle_fade(self, colors, tentacles=[1, 2, 3, 4, 5, 6], loops=2, direction=Direction.UP, tsleep=1/60):
+                self.write_pixels(duration / 120)
+
+    def cycle_fade(self, colors, tentacles=[1, 2, 3, 4, 5, 6], loops=1, direction=Direction.UP, duration=1):
+        """Fades a color range onto a tentacle.
+
+        Useful for animating color ranges blending into other color ranges.
+        """
         # Transition the color range before the rotations
         for c, color in enumerate(Range(colors)):
             for t in tentacles:
@@ -234,22 +250,58 @@ class LuminousBloom(object):
                 else:
                     self.pixels[start + c] = color
 
-            self.write_pixels(tsleep)
+            self.write_pixels(duration / 120)
 
-        self.cycle(colors, tentacles, loops, direction, tsleep)
+        self.cycle(colors, tentacles, loops, direction, duration)
 
-    def sparkle(self, color, tentacles=[1, 2, 3, 4, 5, 6], maximum=50, tsleep=1/15):
-        npixels = []
-        for _ in range(maximum):
-            npixels.append(random.randint(1, self.total_pixels - 1))
+    def speckle(self, color, tentacles=[1, 2, 3, 4, 5, 6], maximum=5, duration=5):
+        """Randomly places pixels of a color on any tentacle up to a maximum
+        """
+        start_time = perf_counter()
+        pixels = {}
+        while perf_counter() - start_time < duration:
+            for t in tentacles:
+                self.__speckle_helper(color, t, pixels, maximum)
 
-        for n in npixels:
-            self.pixels[n] = color.rgb
-            self.write_pixels(tsleep)
+            self.write_pixels(duration / 120)
+
+    def speckle_strobe(self, colors, tentacles=[1, 2, 3, 4, 5, 6], maximum=32, duration=5):
+        """Randomly places pixels of a color range on any tentacle up to a maximum
+        """
+        color_range = list(colors)
+
+        start_time = perf_counter()
+        pixels = {}
+        count = 0
+        while perf_counter() - start_time < duration:
+            if count >= len(color_range):
+                count = 0
+
+            color = color_range[count]
+
+            for t in tentacles:
+                self.__speckle_helper(color, t, pixels, maximum)
+
+            count += 1
+
+            self.write_pixels(duration / 120)
+
+    def __speckle_helper(self, color, t, pixels_dict, maximum):
+        """Map pixels from a speckle's pixel dictionary."""
+        start, end = self.tentacles[t].dims()
+
+        if t not in pixels_dict.keys():
+            pixels_dict[t] = []
+
+        pixels_dict[t].append(random.randint(start, end - 1))
+
+        if len(pixels_dict[t]) >= maximum:
+            self.pixels[pixels_dict[t].pop(0)] = (0, 0, 0)
+
+        for p in pixels_dict[t]:
+            self.pixels[p] = color.rgb
 
     def ripple(self, color, seed=32, tentacles=[1, 2, 3, 4, 5, 6], fade_out=0.75, duration=4):
-        def fade(step): return pow(fade_out, step)
-
         def wave(tentacle, step, point, adjust):
             if step >= point:
                 first = tentacle.start + seed + step - point
@@ -261,7 +313,7 @@ class LuminousBloom(object):
                 if tentacle.contains(last):
                     self.pixels[last] = color.rgb
 
-                color.luminance = fade(step)
+                color.luminance = pow(fade_out, step)
 
         # Once the step is greater than point began to adjust
         def settle(tentacle, step, reset, point):
@@ -282,11 +334,35 @@ class LuminousBloom(object):
             for t in tentacles:
                 wave(self.tentacles[t], step, 0, 0)
                 wave(self.tentacles[t], step, 4, 2)
-                # wave(self.tentacles[t], step, 10, 3)
                 settle(self.tentacles[t], step, reset, 11)
 
             if step > 11:
                 reset += 1
+
+            step += 1
+
+            self.write_pixels(duration / 120)
+
+    def shimmer_pulse(self, color, tentacles=[1, 2, 3, 4, 5, 6], fade_out=0.9, duration=4):
+        def wave(tentacle, step, point, adjust):
+            seed = random.randint(0, 63)
+            first = tentacle.start + seed + step - point
+            last = tentacle.start + seed - step + point
+
+            if tentacle.contains(first):
+                self.pixels[first] = color.rgb
+
+            if tentacle.contains(last):
+                self.pixels[last] = color.rgb
+
+            color.luminance = pow(fade_out, step)
+
+        time_start = perf_counter()
+        step = 0
+        while perf_counter() - time_start <= duration:
+            for t in tentacles:
+                wave(self.tentacles[t], step, 0, 0)
+                wave(self.tentacles[t], step, 4, 2)
 
             step += 1
 

@@ -99,8 +99,8 @@ def animation_4(color1, color2, scale=6):
     black = Colors("Black")
 
     for x in range(1, scale):
-        b.cycle_fade(colors, loops=x, tsleep=1/120 / x)
-        b.swipe(black, direction=Direction.DOWN, tsleep=1/60 / x)
+        b.cycle_fade(colors, loops=x, duration=1)
+        b.swipe(black, direction=Direction.DOWN)
 
 
 def animation_5(color1, color2):
@@ -109,7 +109,6 @@ def animation_5(color1, color2):
         # b.shimmer_pulse(color1, tentacles=[1, 3, 5], duration=0.5)
 
         # b.shimmer_pulse(color2, tentacles=[2, 4, 6], duration=0.5)
-
 
         duration = 1
         b.ripple(color2, seed=63, duration=duration)
@@ -120,7 +119,7 @@ def animation_5(color1, color2):
 if __name__ == '__main__':
     b = LuminousBloom()
 
-    # animation_1()
+#     animation_1()
     # animation_1(Colors("SeaGreen"))
     # animation_1(Colors("LavenderBlush"))
     # animation_1(Colors("Firebrick"), Colors("Goldenrod"))
@@ -133,17 +132,25 @@ if __name__ == '__main__':
 
     # animation_4(Colors("Lavender"), Colors("Purple"))
 
-    # b.sparkle(Colors("Hotpink"))
-    # b.sparkle(Colors("SeaGreen"))
-    # b.sparkle(Colors("Purple"))
-    # b.sparkle(Colors("Goldenrod"))
+    # animation_5(Colors("Goldenrod"), Colors("MediumPurple"))
 
-    animation_5(Colors("Goldenrod"), Colors("MediumPurple"))
+    # b.swipe(Colors("Seagreen"))
+    # b.swipe_blob(Colors("Goldenrod"))
+    # b.swipe_pattern(
+    #     list(Colors("MediumPurple").range_to(Colors("Hotpink"), 8)))
+    # b.stripe(Colors("Purple"))
+    # b.fade(Colors("Firebrick").range_to(Colors("Deeppink"), 64))
+    # b.fade_multi(colors=[Colors("red").range_to(
+    #     Colors("blue"), 64), Colors("blue").range_to(Colors("red"), 64)])
+    # b.cycle(list(Colors("Red").range_to(Colors("Blue"), 32)) +
+    #         list(Colors("Blue").range_to(Colors("Red"), 32)))
+    # b.cycle_fade(Colors("Red").range_to(Colors("Blue"), 64))
 
     # b.cycle(Colors("Lavender").range_to(Colors("Purple"), 64))
     # b.cycle(Colors("Lavender").range_to(Colors("Purple"), 64))
     # b.cycle(Colors("Goldenrod").range_to(Colors("Hotpink"), 64))
     # b.cycle(Colors("Hotpink").range_to(Colors("SeaGreen"), 64))
+    b.speckle_strobe(Colors("Red").range_to(Colors("Orange"), 2))
 
     # b.swirl(length=2, step=7, color=Colors("red"), tsleep=1/10)
 

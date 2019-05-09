@@ -44,3 +44,8 @@ class Range(deque):
 
         for color in color_range:
             self.append(color.rgb)
+
+        length = len(self)
+        if length < 64:
+            for _ in range(64 - length):
+                self.append((0, 0, 0))

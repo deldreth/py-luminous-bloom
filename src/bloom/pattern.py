@@ -20,7 +20,7 @@ class Pattern(deque):
     """
     __l = 64
 
-    def __init__(self, l, color):
+    def __init__(self, l, color_or_range):
         whole = range(self.__l)
         steps = whole[0::l]
         for index, _ in enumerate(steps):
@@ -28,10 +28,10 @@ class Pattern(deque):
                 if index % 2:
                     self.append((0, 0, 0))
                 else:
-                    if isinstance(color, (list,)):
-                        self.append(color[(p - l) % l].rgb)
+                    if isinstance(color_or_range, (list,)):
+                        self.append(color_or_range[(p - l) % l].rgb)
                     else:
-                        self.append(color.rgb)
+                        self.append(color_or_range.rgb)
 
     def shift(self, step=1):
         self.rotate(step)

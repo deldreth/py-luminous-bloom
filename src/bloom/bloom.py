@@ -3,6 +3,7 @@
 import opc
 import random
 import math
+import types
 from enum import Enum
 from time import sleep, perf_counter
 
@@ -64,22 +65,21 @@ class LuminousBloom(object):
                 self.put(t, rgb=wheel(color))
                 self.write_pixels(tsleep)
 
-    def rotate(self, color, loops=5, direction=Direction.RIGHT, tsleep=1/20):
+    def rotate(self, color, loops=1, direction=Direction.RIGHT, duration=1):
         color = range_or_luminance(color, 64)
 
         tentacles = list(self.tentacles.items())
         if direction is Direction.LEFT:
             tentacles = list(reversed(tentacles))
 
-        for _ in range(loops):
-            for _, tentacle in tentacles:
-                self.pixels = [(0, 0, 0)] * self.total_pixels
+        for _, tentacle in tentacles:
+            self.pixels = [(0, 0, 0)] * self.total_pixels
 
-                for ic, c in enumerate(color):
-                    start, _ = tentacle.dims()
-                    self.pixels[start + ic] = c
+            for ic, c in enumerate(color):
+                start, _ = tentacle.dims()
+                self.pixels[start + ic] = c
 
-                self.write_pixels(tsleep)
+            self.write_pixels(duration / 60)
 
     def swipe(self, color, tentacles=[1, 2, 3, 4, 5, 6], direction=Direction.UP, duration=1):
         rng = range(self.__l)
@@ -117,9 +117,9 @@ class LuminousBloom(object):
 
             self.write_pixels(duration / 120)
 
-    def swipe_pattern(self, colors, tentacles=[1, 2, 3, 4, 5, 6], direction=Direction.UP, duration=2):
-        length = len(colors)
-        pattern = Pattern(length, colors)
+    def swipe_pattern(self, color_or_range, tentacles=[1, 2, 3, 4, 5, 6], direction=Direction.UP, duration=2):
+        length = len(color_or_range)
+        pattern = Pattern(length, color_or_range)
 
         rng = range(length * -1, self.__l + length)
 
@@ -162,7 +162,7 @@ class LuminousBloom(object):
 
             pattern.shift(step)
 
-            self.write_pixels(duration / 120)
+            self.write_pixels(5 / 120)
 
     # def swirl(self, color, length=8, step=1, tentacles=[1, 2, 3, 4, 5, 6], direction=Direction.UP, duration=1):
     #     pattern = Pattern(length, color)
@@ -367,3 +367,42 @@ class LuminousBloom(object):
             step += 1
 
             self.write_pixels(duration / 120)
+
+    def flicker(self, cooling=200, sparking=120, tentacles=[1, 2, 3, 4, 5, 6], duration=10):
+        def set_heat(pixel, temperature):
+            scale = round((temperature/255)*191)
+            heatramp = scale & 0x3F
+            heatramp <<= 2
+
+            if scale > 0x80:
+                self.pixels[pixel] = (255, 255, heatramp)
+            elif scale > 0x40:
+                self.pixels[pixel] = (255, heatramp, 0)
+            else:
+                self.pixels[pixel] = (heatramp, 0, 0)
+
+        start_time = perf_counter()
+        while perf_counter() - start_time < duration:
+            heat = [x for x in reversed(range(0, 64))]
+
+            for p in range(0, 64):
+                cooldown = random.randrange(
+                    0, round(((cooling * 10) / 64) + 2))
+                if cooldown > heat[p]:
+                    heat[p] = 0
+                else:
+                    heat[p] = heat[p] - cooldown
+
+            for p in range(64 - 1, 1, -1):
+                heat[p] = (heat[p - 1] + heat[p - 2] + heat[p - 2]) / 3
+
+            if random.randrange(0, 255) < sparking:
+                spark = random.randrange(0, 6)
+                heat[spark] = heat[spark] + random.randrange(32, 64)
+
+            for t in tentacles:
+                start, _ = self.tentacles[t].dims()
+                for p in range(0, 64):
+                    set_heat(start + p, heat[p])
+
+            self.write_pixels(8 / 120)

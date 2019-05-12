@@ -9,7 +9,7 @@ class Tentacle:
 
         # Tentacle dimensions, each being 64 pixels in length
         self.start = (n * self.__l) - self.__l
-        self.end = n * self.__l
+        self.end = n * self.__l - 1
 
     def __iter__(self):
         p = self.start
@@ -33,11 +33,15 @@ class Tentacle:
         return pixels
 
     def colorize(self, pixels, rgb):
-        pixels[self.start:self.end] = [rgb for _ in range(self.__l)]
+        for ic in range(self.__l):
+            if self.contains(self.start + ic):
+                pixels[self.start + ic] = rgb
         return pixels
 
     def patternize(self, pixels, colors):
-        pixels[self.start:self.end] = [c for c in colors]
+        for ic, c in enumerate(colors):
+            if self.contains(self.start + ic):
+                pixels[self.start + ic] = c
         return pixels
 
     def set_pattern(self, pixels, pattern):

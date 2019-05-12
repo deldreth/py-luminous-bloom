@@ -18,6 +18,6 @@ class ColorCase(unittest.TestCase):
         self.assertEqual(colors, expected)
 
         colors = list(Colors("purple").range_to(Colors("white"), 5))
-        expected = [(0, 0, 0), (128, 0, 128), (28, 70, 196),
+        expected = [(128, 0, 128), (28, 70, 196),
                     (112, 207, 160), (213, 219, 195), (255, 255, 255)]
         self.assertEqual(range_or_luminance(colors, 5), expected)

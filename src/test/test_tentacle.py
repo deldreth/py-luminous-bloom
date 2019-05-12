@@ -3,6 +3,7 @@
 import unittest
 
 from bloom.tentacle import Tentacle
+from bloom.color import Colors
 
 
 class TentacleCase(unittest.TestCase):
@@ -24,3 +25,20 @@ class TentacleCase(unittest.TestCase):
         start, end = tentacle.dims()
         self.assertEqual(start, 128)
         self.assertEqual(end, 191)
+
+    def test_patternize(self):
+        colors = list(Colors("Red").range_to(Colors("Blue"), 64))
+        pixels = [(0, 0, 0) for x in range(385)]
+
+        tentacle = Tentacle(1)
+        pixels = tentacle.patternize(pixels, colors)
+
+        self.assertEqual(len(pixels), 385)
+
+    def test_colorize(self):
+        pixels = [(0, 0, 0) for x in range(385)]
+
+        tentacle = Tentacle(1)
+        pixels = tentacle.colorize(pixels, (255, 255, 255))
+
+        self.assertEqual(len(pixels), 385)

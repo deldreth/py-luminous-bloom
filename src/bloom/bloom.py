@@ -65,7 +65,7 @@ class LuminousBloom(object):
                 self.put(t, rgb=wheel(color))
                 self.write_pixels(tsleep)
 
-    def rotate(self, color, loops=1, direction=Direction.RIGHT, duration=1):
+    def rotate(self, color, loops=1, direction=Direction.RIGHT, duration=10):
         color = range_or_luminance(color, 64)
 
         tentacles = list(self.tentacles.items())
@@ -79,7 +79,7 @@ class LuminousBloom(object):
                 start, _ = tentacle.dims()
                 self.pixels[start + ic] = c
 
-            self.write_pixels(duration / 60)
+            self.write_pixels(duration / 120)
 
     def swipe(self, color, tentacles=[1, 2, 3, 4, 5, 6], direction=Direction.UP, duration=1):
         rng = range(self.__l)
@@ -153,16 +153,14 @@ class LuminousBloom(object):
         if direction is Direction.DOWN:
             step *= -1
 
-        start_time = perf_counter()
-
-        while perf_counter() - start_time < duration:
+        for _ in range(self.__l):
             for t in tentacles:
                 self.pixels = self.tentacles[t].patternize(
                     self.pixels, pattern)
 
             pattern.shift(step)
 
-            self.write_pixels(5 / 120)
+            self.write_pixels(duration / 120)
 
     # def swirl(self, color, length=8, step=1, tentacles=[1, 2, 3, 4, 5, 6], direction=Direction.UP, duration=1):
     #     pattern = Pattern(length, color)
@@ -219,20 +217,19 @@ class LuminousBloom(object):
 
     def cycle(self, colors, tentacles=[1, 2, 3, 4, 5, 6], loops=1, direction=Direction.UP, duration=1):
         """
-        Cycle patternizes any tentacle with a range of colors. For the best results the length of the 
+        Cycle patternizes any tentacle with a range of colors. For the best results the length of the
         color range should be 64. However if the color range is less than 64, black will be appended
         to the end of the color range.
         """
         color_range = Range(colors)
 
         for _ in range(loops):
-            for _ in range(len(color_range)):
+            for _ in range(self.__l):
                 for t in tentacles:
                     self.pixels = self.tentacles[t].patternize(
                         self.pixels, color_range)
 
-                rotation = -1 if direction is Direction.DOWN else 1
-                color_range.rotate(rotation)
+                color_range.rotate(-1 if direction is Direction.DOWN else 1)
 
                 self.write_pixels(duration / 120)
 
@@ -330,7 +327,7 @@ class LuminousBloom(object):
         time_start = perf_counter()
         step = 0
         reset = 0
-        while perf_counter() - time_start <= duration:
+        while perf_counter() - time_start < duration:
             for t in tentacles:
                 wave(self.tentacles[t], step, 0, 0)
                 wave(self.tentacles[t], step, 4, 2)
@@ -370,7 +367,7 @@ class LuminousBloom(object):
 
     def flicker(self, cooling=200, sparking=120, tentacles=[1, 2, 3, 4, 5, 6], duration=10):
         def set_heat(pixel, temperature):
-            scale = round((temperature/255)*191)
+            scale = round((temperature/100)*191)
             heatramp = scale & 0x3F
             heatramp <<= 2
 
@@ -405,4 +402,4 @@ class LuminousBloom(object):
                 for p in range(0, 64):
                     set_heat(start + p, heat[p])
 
-            self.write_pixels(8 / 120)
+            self.write_pixels(1 / 15)

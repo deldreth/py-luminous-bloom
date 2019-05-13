@@ -404,7 +404,7 @@ class LuminousBloom(object):
 
             self.write_pixels(1 / 15)
 
-    def meteor(self, color, tentacles=[1, 2, 3, 4, 5, 6], duration=1):
+    def meteor(self, color, tentacles=[1, 2, 3, 4, 5, 6], fade=48, duration=1):
         size = 8
 
         for p in range(self.__l * 2):
@@ -413,7 +413,8 @@ class LuminousBloom(object):
 
                 for pfade in range(start, end + 1):
                     if random.randrange(0, 10) > 5:
-                        self.pixels[pfade] = self.__meteor_fade_helper(pfade)
+                        self.pixels[pfade] = self.__meteor_fade_helper(
+                            pfade, fade)
 
                 offset = start + p
                 for j in range(size):
@@ -422,10 +423,30 @@ class LuminousBloom(object):
 
             self.write_pixels(duration / 60)
 
-    def __meteor_fade_helper(self, pixel, fade=48):
+    def __meteor_fade_helper(self, pixel, fade=8):
         r, g, b = self.pixels[pixel]
         r = 0 if r <= 10 else round(r - (r * fade / 256))
         g = 0 if g <= 10 else round(g - (g * fade / 256))
         b = 0 if b <= 10 else round(b - (b * fade / 256))
 
         return (r, g, b)
+
+    def swipe_and_fade(self, color, tentacles=[1, 2, 3, 4, 5, 6]):
+        for p in range(self.__l):
+            for t in tentacles:
+                start, _ = self.tentacles[t].dims()
+                self.pixels[start + p] = color.rgb
+
+            self.write_pixels(1 / 120)
+
+        self.fade_all(tentacles)
+
+    def fade_all(self, tentacles=[1, 2, 3, 4, 5, 6]):
+        start_time = perf_counter()
+        while perf_counter() - start_time < 4:
+            for p in range(self.__l):
+                for t in tentacles:
+                    self.pixels[self.tentacles[t].start +
+                                p] = self.__meteor_fade_helper(self.tentacles[t].start + p)
+
+            self.write_pixels(1 / 30)

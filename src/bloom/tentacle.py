@@ -55,4 +55,4 @@ class Tentacle:
 
     def contains(self, p):
         """ Returns True if a pixels exists within its dims """
-        return self.start <= p < self.end
+        return self.start <= p <= self.end

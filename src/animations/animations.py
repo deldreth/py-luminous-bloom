@@ -180,6 +180,52 @@ class Animations():
             if count > len(colors) - 1:
                 count = 0
 
+    def meteors(self):
+        colors = [
+            Colors("Deeppink"),
+            Colors("Seagreen"),
+            Colors("RoyalBlue"),
+            Colors("BlueViolet")
+        ]
+
+        count = 0
+        start = perf_counter()
+        while perf_counter() - start < 60:
+            color = colors[randrange(0, len(colors))]
+            self.bloom.meteor(color, duration=2)
+
+            color = colors[randrange(0, len(colors))]
+            self.bloom.meteor(color, tentacles=self.evens, duration=0.5)
+
+            color = colors[randrange(0, len(colors))]
+            self.bloom.meteor(color, tentacles=self.odds, duration=0.5)
+
+            count += 1
+
+            if count > len(colors) - 1:
+                count = 0
+
+    def meteor_rotate(self):
+        colors = [
+            Colors("Deeppink"),
+            Colors("Seagreen"),
+            Colors("RoyalBlue"),
+            Colors("BlueViolet"),
+            Colors("LimeGreen")
+        ]
+
+        count = 0
+        start = perf_counter()
+        while perf_counter() - start < 60:
+            for t in self.bloom.tentacles:
+                self.bloom.meteor(colors[randrange(0, len(colors))], tentacles=[
+                                  t], fade=8, duration=0.15)
+
+            count += 1
+
+            if count > len(colors) - 1:
+                count = 0
+
     # def animation_9(self, bloom):
     #     colors = list(Colors("Hotpink").range_to(Colors("Black"), 32)) + \
     #         list(Colors("Black").range_to(Colors("Hotpink"), 32))

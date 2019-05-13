@@ -9,7 +9,7 @@ An Ignite! granted funded project.
 - [x] Gamma corrected color wheel func
 - [x] All tentacles swipe up
 - [x] All tentacles fill up
-- [ ] Tentacles can receive repeating patterns
+- [x] Tentacles can receive repeating patterns
 - [ ] All tentacles strobe up
 - [x] Stripe with direction
 - [x] Swirl with direction
@@ -19,6 +19,7 @@ An Ignite! granted funded project.
 - [ ] Shimmer
 - [x] Pulsing shimmer
 - [x] Ripple
+- [ ] Finish animations
 
 ### Timing:
 

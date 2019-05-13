@@ -18,8 +18,11 @@ class Colors(Color):
         return (round(red * 255), round(green * 255), round(blue * 255))
 
     def range_to(self, color, distance):
+        colors = []
         for hsl in color_scale(self._hsl, color.hsl, distance - 1):
-            yield Colors(hsl=hsl)
+            colors.append(Colors(hsl=hsl))
+
+        return colors
 
 
 def range_or_luminance(color, length):

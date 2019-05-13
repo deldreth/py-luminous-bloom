@@ -162,19 +162,22 @@ class LuminousBloom(object):
 
             self.write_pixels(duration / 120)
 
-    # def swirl(self, color, length=8, step=1, tentacles=[1, 2, 3, 4, 5, 6], direction=Direction.UP, duration=1):
-    #     pattern = Pattern(length, color)
-
+    # def swirl(self, color_range, length=8, tentacles=[1, 2, 3, 4, 5, 6], direction=Direction.UP, duration=1):
     #     if direction is Direction.DOWN:
     #         step *= -1
+    #     previous = 0
+    #     for p in range(self.__l):
+    #         if previous > 0:
+    #             print(previous)
+    #             previous = p + 2
 
-    #     for _ in range(self.__l):
-    #         for key, t in self.tentacles.items():
-    #             if key in tentacles:
-    #                 self.pixels = t.set_pattern(self.pixels, pattern)
-    #             pattern.shift(step)
+    #         for t in tentacles:
+    #             self.pixels[previous] = color_range.rgb
 
-    #         self.write_pixels(duration / 120)
+    #             start, _ = self.tentacles[t].dims()
+    #             previous = start + t
+
+    #             self.write_pixels(duration / 5)
 
     def fade(self, colors, tentacles=[1, 2, 3, 4, 5, 6], duration=1):
         """Fade any tentacle through a color range
@@ -251,16 +254,13 @@ class LuminousBloom(object):
 
         self.cycle(colors, tentacles, loops, direction, duration)
 
-    def speckle(self, color, tentacles=[1, 2, 3, 4, 5, 6], maximum=5, duration=5):
+    def speckle(self, color, tentacles=[1, 2, 3, 4, 5, 6], maximum=5, storage={}, duration=5):
         """Randomly places pixels of a color on any tentacle up to a maximum
         """
-        start_time = perf_counter()
-        pixels = {}
-        while perf_counter() - start_time < duration:
-            for t in tentacles:
-                self.__speckle_helper(color, t, pixels, maximum)
+        for t in tentacles:
+            self.__speckle_helper(color, t, storage, maximum)
 
-            self.write_pixels(duration / 120)
+        self.write_pixels(duration / 120)
 
     def speckle_strobe(self, colors, tentacles=[1, 2, 3, 4, 5, 6], maximum=32, duration=5):
         """Randomly places pixels of a color range on any tentacle up to a maximum
@@ -403,3 +403,29 @@ class LuminousBloom(object):
                     set_heat(start + p, heat[p])
 
             self.write_pixels(1 / 15)
+
+    def meteor(self, color, tentacles=[1, 2, 3, 4, 5, 6], duration=1):
+        size = 8
+
+        for p in range(self.__l * 2):
+            for t in tentacles:
+                start, end = self.tentacles[t].dims()
+
+                for pfade in range(start, end + 1):
+                    if random.randrange(0, 10) > 5:
+                        self.pixels[pfade] = self.__meteor_fade_helper(pfade)
+
+                offset = start + p
+                for j in range(size):
+                    if offset - j <= end and offset - j >= start:
+                        self.pixels[start + p - j] = color.rgb
+
+            self.write_pixels(duration / 60)
+
+    def __meteor_fade_helper(self, pixel, fade=48):
+        r, g, b = self.pixels[pixel]
+        r = 0 if r <= 10 else round(r - (r * fade / 256))
+        g = 0 if g <= 10 else round(g - (g * fade / 256))
+        b = 0 if b <= 10 else round(b - (b * fade / 256))
+
+        return (r, g, b)

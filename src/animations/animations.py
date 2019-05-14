@@ -22,17 +22,36 @@ from bloom.color import Colors
 class Animations():
     evens = [1, 3, 5]
     odds = [2, 4, 6]
+    colors = ["MediumBlue", "MediumSpringGreen",
+              "Lime", "ForestGreen", "Turquoise",
+              "MidnightBlue", "DarkGreen", "Indigo",
+              "BlueViolet", "MediumVioletRed",
+              "Aquamarine", "Magenta", "DeepPink",
+              "HotPink", "FireBrick", "SaddleBrown",
+              "DarkGoldenrod", "OrangeRed", "DarkOrange",
+              "Gold", "SeaGreen", "DarkBlue"]
 
     def __init__(self, bloom):
         self.bloom = bloom
 
-    def swipe_and_stripe(self, bloom, color1, color2, scale=4):
-        for x in range(1, scale):
-            color_range = list(color1.range_to(color2, 4 * x))
-            bloom.swipe_blob(color1, tentacles=self.evens, duration=1)
-            bloom.stripe(color_range, length=len(color_range), duration=5)
-            bloom.swipe_blob(color1, tentacles=self.odds,
-                             direction=Direction.DOWN, duration=1)
+    def swipe_and_stripe(self):
+        colors = [
+            (Colors("OrangeRed"), Colors("SeaGreen")),
+            (Colors("DarkGreen"), Colors("Indigo")),
+            (Colors("MediumPurple"), Colors("White")),
+            (Colors("MediumBlue"), Colors("MediumVioletRed")),
+            (Colors("SaddleBrown"), Colors("Yellow")),
+        ]
+
+        start = perf_counter()
+        while perf_counter() - start < 60:
+            color1, color2 = colors[randrange(0, len(colors))]
+
+            for x in range(1, 4):
+                color_range = list(color1.range_to(color2, 4 * x))
+                self.bloom.swipe_blob(color1, duration=1)
+                self.bloom.stripe(color_range, length=len(
+                    color_range), duration=10)
 
     def gradient_spin(self, bloom, color1, color2, scale=4):
         # Rotate each tentacle, coloring with a range and gradually increasing speed
@@ -66,6 +85,25 @@ class Animations():
 
             if count > len(colors) - 1:
                 count = 0
+
+    def cycle_all(self):
+        colors = [
+            (Colors("Indigo"), Colors("BlueViolet")),
+            (Colors("MediumPurple"), Colors("Seagreen")),
+            (Colors("SeaGreen"), Colors("OrangeRed")),
+            (Colors("OrangeRed"), Colors("Gold")),
+            (Colors("Gold"), Colors("MediumBlue")),
+            (Colors("MediumBlue"), Colors("MidnightBlue")),
+        ]
+
+        start = perf_counter()
+        while perf_counter() - start < 60:
+            c1, c2 = colors[randrange(0, len(colors))]
+            range_to = list(c1.range_to(c2, 32))
+            color_list = range_to + list(reversed(range_to[0:31]))
+
+            for _ in range(10):
+                self.bloom.cycle(color_list, duration=2)
 
     def fast_drops(self):
         colors = [
@@ -181,50 +219,25 @@ class Animations():
                 count = 0
 
     def meteors(self):
-        colors = [
-            Colors("Deeppink"),
-            Colors("Seagreen"),
-            Colors("RoyalBlue"),
-            Colors("BlueViolet")
-        ]
-
-        count = 0
         start = perf_counter()
         while perf_counter() - start < 60:
-            color = colors[randrange(0, len(colors))]
-            self.bloom.meteor(color, duration=2)
+            color = self.colors[randrange(0, len(self.colors))]
+            self.bloom.meteor(Colors(color), duration=2)
 
-            color = colors[randrange(0, len(colors))]
-            self.bloom.meteor(color, tentacles=self.evens, duration=0.5)
+            color = self.colors[randrange(0, len(self.colors))]
+            self.bloom.meteor(
+                Colors(color), tentacles=self.evens, duration=0.5)
 
-            color = colors[randrange(0, len(colors))]
-            self.bloom.meteor(color, tentacles=self.odds, duration=0.5)
-
-            count += 1
-
-            if count > len(colors) - 1:
-                count = 0
+            color = self.colors[randrange(0, len(self.colors))]
+            self.bloom.meteor(Colors(color), tentacles=self.odds, duration=0.5)
 
     def meteor_rotate(self):
-        colors = [
-            Colors("Deeppink"),
-            Colors("Seagreen"),
-            Colors("RoyalBlue"),
-            Colors("BlueViolet"),
-            Colors("LimeGreen")
-        ]
-
-        count = 0
         start = perf_counter()
         while perf_counter() - start < 60:
             for t in self.bloom.tentacles:
-                self.bloom.meteor(colors[randrange(0, len(colors))], tentacles=[
-                                  t], fade=8, duration=0.15)
-
-            count += 1
-
-            if count > len(colors) - 1:
-                count = 0
+                color = Colors(self.colors[randrange(0, len(self.colors))])
+                self.bloom.meteor(color, tentacles=[
+                                  t], fade=15, duration=0.25)
 
     # def animation_9(self, bloom):
     #     colors = list(Colors("Hotpink").range_to(Colors("Black"), 32)) + \

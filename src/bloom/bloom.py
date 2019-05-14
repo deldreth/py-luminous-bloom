@@ -365,17 +365,23 @@ class LuminousBloom(object):
 
             self.write_pixels(duration / 120)
 
-    def flicker(self, cooling=200, sparking=120, tentacles=[1, 2, 3, 4, 5, 6], duration=10):
+    def flicker(self, cooling=150, sparking=120, tentacles=[1, 2, 3, 4, 5, 6], duration=10):
         def set_heat(pixel, temperature):
-            scale = round((temperature/100)*191)
-            heatramp = scale & 0x3F
+            scale = round((temperature/100)*200)
+            heatramp = scale & 63
             heatramp <<= 2
 
-            if scale > 0x80:
+            if scale > 128:
+                # self.pixels[pixel] = (255, heatramp, 255)
+                # self.pixels[pixel] = (heatramp, 255, 255)
                 self.pixels[pixel] = (255, 255, heatramp)
-            elif scale > 0x40:
+            elif scale > 64:
+                # self.pixels[pixel] = (heatramp, 255, 255)
+                # self.pixels[pixel] = (255, 255, heatramp)
                 self.pixels[pixel] = (255, heatramp, 0)
             else:
+                # self.pixels[pixel] = (0, 0, heatramp)
+                # self.pixels[pixel] = (0, heatramp, 0)
                 self.pixels[pixel] = (heatramp, 0, 0)
 
         start_time = perf_counter()
@@ -402,7 +408,7 @@ class LuminousBloom(object):
                 for p in range(0, 64):
                     set_heat(start + p, heat[p])
 
-            self.write_pixels(1 / 15)
+            self.write_pixels(1 / 5)
 
     def meteor(self, color, tentacles=[1, 2, 3, 4, 5, 6], fade=48, duration=1):
         size = 8
@@ -447,6 +453,14 @@ class LuminousBloom(object):
             for p in range(self.__l):
                 for t in tentacles:
                     self.pixels[self.tentacles[t].start +
-                                p] = self.__meteor_fade_helper(self.tentacles[t].start + p)
+                                p] = self.__fader(self.tentacles[t].start + p)
 
-            self.write_pixels(1 / 30)
+            self.write_pixels(1 / 60)
+
+    def __fader(self, pixel, fade=8):
+        r, g, b = self.pixels[pixel]
+        r = 0 if r <= 20 else round(r - (r * fade / 256))
+        g = 0 if g <= 20 else round(g - (g * fade / 256))
+        b = 0 if b <= 20 else round(b - (b * fade / 256))
+
+        return (r, g, b)

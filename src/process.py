@@ -2,10 +2,10 @@
 
 import random
 from multiprocessing import Process
-from time import perf_counter
+from time import sleep, perf_counter
 
 from bloom.bloom import LuminousBloom, Direction
-from bloom.color import Colors
+from bloom.color import Colors, RGB_TO_COLOR_NAMES
 from animations.animations import Animations
 
 
@@ -14,10 +14,10 @@ def main():
     animates = Animations(bloom)
 
     while True:
-        animates.swipe_and_stripe(bloom, Colors(
-            "Mediumpurple"), Colors("White"))
+        animates.cycle_all()
+        # animates.swipe_and_stripe()
 
-        # animates.gradient_spin(b, Colors("Mediumpurple"), Colors("White"))
+        # animates.gradient_spin(bloom, Colors("Mediumpurple"), Colors("White"))
 
         # animates.cycle_even_and_odds()
 
@@ -29,11 +29,15 @@ def main():
 
         # animates.speckle_all_unique()
 
-        # animates.shimmer_heartbeat()
+        animates.shimmer_heartbeat()
 
         # animates.meteors()
 
         # animates.meteor_rotate()
+
+        bloom.flicker(duration=60)
+
+        bloom.fade_all()
 
 
 if __name__ == '__main__':

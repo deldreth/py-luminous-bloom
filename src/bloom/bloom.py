@@ -11,6 +11,7 @@ from time import sleep, perf_counter
 from .tentacle import Tentacle
 from .color import wheel, range_or_luminance, Colors
 from .pattern import Pattern, Range
+from .image import Image
 
 
 class Direction(Enum):
@@ -52,18 +53,6 @@ class LuminousBloom(object):
             # self.pixels[end+5] = Colors("blue").rgb
 
         self.write_pixels()
-
-    def put(self, t, red=0, green=0, blue=0, rgb=(0, 0, 0)):
-        if rgb > (0, 0, 0):
-            red, green, blue = rgb
-
-        self.pixels = self.tentacles[t].set(self.pixels, red, green, blue)
-
-    def rainbow_rotate(self, tsleep=0.1):
-        for color in range(1, 250, 20):
-            for t in range(1, 7):
-                self.put(t, rgb=wheel(color))
-                self.write_pixels(tsleep)
 
     def rotate(self, color, loops=1, direction=Direction.RIGHT, duration=10):
         color = range_or_luminance(color, 64)
@@ -216,7 +205,7 @@ class LuminousBloom(object):
             for tentacle, color in tentacle_colors:
                 self.pixels = tentacle.colorize(self.pixels, color[x].rgb)
 
-            self.write_pixels(duration / 120)
+            self.write_pixels(duration / 60)
 
     def cycle(self, colors, tentacles=[1, 2, 3, 4, 5, 6], loops=1, direction=Direction.UP, duration=1):
         """
@@ -464,3 +453,12 @@ class LuminousBloom(object):
         b = 0 if b <= 20 else round(b - (b * fade / 256))
 
         return (r, g, b)
+
+    def image(self, path, tentacles=[1, 2, 3, 4, 5, 6], duration=1):
+        image_lines = Image().get_lines(path)
+
+        for line in image_lines:
+            for t in tentacles:
+                self.pixels = self.tentacles[t].patternize(self.pixels, line)
+
+            self.write_pixels(duration / 120)

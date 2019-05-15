@@ -10,20 +10,19 @@ An Ignite! granted funded project.
 - [x] All tentacles swipe up
 - [x] All tentacles fill up
 - [x] Tentacles can receive repeating patterns
-- [ ] All tentacles strobe up
 - [x] Stripe with direction
 - [x] Swirl with direction
 - [x] Any tentacle fades
 - [x] Different tentacles fade
 - [x] Sparkle
-- [ ] Shimmer
+- [x] Shimmer
 - [x] Pulsing shimmer
 - [x] Ripple
-- [ ] Finish animations
+- [x] Finish animations
 
 ### Timing:
 
-- [ ] Effects expressed in seconds/minutes
+- [x] Animations expressed in seconds/minutes
 
 ## Requirements
 

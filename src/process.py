@@ -15,37 +15,35 @@ def main():
 
         animates.cycle_all()
 
+        animates.image("images/watermelon.jpg")
+
         animates.swipe_and_stripe()
 
-        animates.image("images/watermelon.jpg")
+        animates.image("images/circle_1.jpg")
 
         animates.gradient_spin()
 
-        animates.image("images/waves.jpg")
+        animates.image("images/circle_2.jpg")
 
         animates.cycle_even_and_odds()
 
+        animates.image("images/waves.jpg")
+
         animates.fast_drops()
 
-        animates.shimmer_with_time()
+        animates.image("images/water.jpg")
 
-        animates.image("images/circle_1.jpg")
+        animates.shimmer_with_time()
 
         animates.speckle_even_and_odds()
 
         animates.shimmer_heartbeat()
 
-        animates.image("images/circle_2.jpg")
-
         animates.meteors()
-
-        animates.image("images/color_waves.jpg")
 
         animates.meteor_rotate()
 
         animates.fade_even_and_odds()
-
-        animates.image("images/water.jpg")
 
         bloom.flicker(duration=60)
 

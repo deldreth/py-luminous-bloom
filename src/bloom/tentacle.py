@@ -36,22 +36,24 @@ class Tentacle:
         for ic in range(self.__l):
             if self.contains(self.start + ic):
                 pixels[self.start + ic] = rgb
+
         return pixels
 
     def patternize(self, pixels, colors):
         for ic, c in enumerate(colors):
             if self.contains(self.start + ic):
                 pixels[self.start + ic] = c
+
         return pixels
 
     def set_pattern(self, pixels, pattern):
-        # pixels[self.start:self.end] = [pattern[p] for p in range(self.__l)]
         for p, item in enumerate(range(self.start, self.end)):
             pixels[item] = pattern[p]
+
         return pixels
 
     def get(self, pixels):
-        return pixels[self.start:self.end]
+        return pixels[self.start:self.end + 1]
 
     def contains(self, p):
         """ Returns True if a pixels exists within its dims """

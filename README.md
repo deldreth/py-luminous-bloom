@@ -8,6 +8,7 @@ An Ignite! granted funded project.
 - [Setup](#setup)
   - [Installation](#installation)
     - [Raspberry Pi (Raspbian Stretch)](#raspberry-pi--raspbian-stretch-)
+    - [Setup Luminous Bloom](#setup-luminous-bloom)
     - [Setup supervisor](#setup-supervisor)
   - [Development](#development)
     - [OPC (OpenPixelControl)](#opc--openpixelcontrol-)
@@ -67,11 +68,13 @@ sudo apt-get -y install libtiff5-dev libjpeg62-turbo-dev zlib1g-dev   libfreetyp
 
 #### Setup Luminous Bloom
 
-```
-cd ~/py-luminous-bloom
+cd into the cloned project directory and install the pip requirements.
 
+```
 pip install -r requirements.txt
 ```
+
+#### Setup supervisor
 
 Install supervisord and supervisorctl.
 
@@ -80,8 +83,6 @@ _supervisor could be installed manually through pip but it's also available thro
 ```
 sudo apt-get install supervisor
 ```
-
-#### Setup supervisor
 
 Append the contents of (supervisor.conf)[./supervisor.conf] to `/etc/supervisor/supervisord.conf` (or wherever a supervisor config is located).
 

@@ -1,59 +1,50 @@
 #!/usr/bin/env python
 
-from multiprocessing import Process
 from random import randint
 
 from bloom.bloom import LuminousBloom
 from animations.animations import Animations
 
+bloom = LuminousBloom()
+animates = Animations(bloom)
 
-def main():
-    bloom = LuminousBloom()
-    animates = Animations(bloom)
+while True:
+    animates.image("images/color_waves.jpg")
 
-    while True:
-        animates.image("images/color_waves.jpg")
+    animates.cycle_all()
 
-        animates.cycle_all()
+    animates.image("images/watermelon.jpg")
 
-        animates.image("images/watermelon.jpg")
+    animates.swipe_and_stripe()
 
-        animates.swipe_and_stripe()
+    animates.image("images/circle_1.jpg")
 
-        animates.image("images/circle_1.jpg")
+    animates.gradient_spin()
 
-        animates.gradient_spin()
+    animates.image("images/circles/{}.jpg".format(randint(1, 8)))
 
-        animates.image("images/circles/{}.jpg".format(randint(1, 8)))
+    animates.cycle_even_and_odds()
 
-        animates.cycle_even_and_odds()
+    animates.speckle_even_and_odds()
 
-        animates.speckle_even_and_odds()
+    animates.image("images/waves.jpg")
 
-        animates.image("images/waves.jpg")
+    animates.fast_drops()
 
-        animates.fast_drops()
+    animates.image("images/water.jpg")
 
-        animates.image("images/water.jpg")
+    animates.shimmer_with_time()
 
-        animates.shimmer_with_time()
+    animates.fade_cycle()
 
-        animates.fade_cycle()
+    animates.shimmer_heartbeat()
 
-        animates.shimmer_heartbeat()
+    animates.meteors()
 
-        animates.meteors()
+    animates.meteor_rotate()
 
-        animates.meteor_rotate()
+    animates.fade_even_and_odds()
 
-        animates.fade_even_and_odds()
+    bloom.flicker(duration=60)
 
-        bloom.flicker(duration=60)
-
-        bloom.fade_all()
-
-
-if __name__ == '__main__':
-    p = Process(target=main)
-    p.start()
-    p.join()
+    bloom.fade_all()

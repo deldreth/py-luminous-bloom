@@ -9,8 +9,8 @@ from bloom.color import Colors
 
 
 class Animations():
-    evens = [1, 3, 5]
-    odds = [2, 4, 6]
+    odds = [1, 3, 5]
+    evens = [2, 4, 6]
     colors = ["MediumBlue", "MediumSpringGreen",
               "Lime", "ForestGreen", "Turquoise",
               "MidnightBlue", "DarkGreen", "Indigo",
@@ -33,7 +33,7 @@ class Animations():
         ]
 
         start = perf_counter()
-        while perf_counter() - start < 4:
+        while perf_counter() - start < 60:
             color1, color2 = colors[randrange(0, len(colors))]
 
             for x in range(1, 4):
@@ -46,7 +46,7 @@ class Animations():
 
     def gradient_spin(self):
         start = perf_counter()
-        while perf_counter() - start < 10:
+        while perf_counter() - start < 30:
             color1 = self.colors[randrange(0, len(self.colors))]
             color2 = self.colors[randrange(0, len(self.colors))]
             color_range = list(Colors(color1).range_to(Colors(color2), 64))
@@ -208,5 +208,23 @@ class Animations():
 
             self.bloom.fade_multi(
                 [c1.range_to(c2, 12), c2.range_to(c1, 12)], duration=8)
+            self.bloom.fade_multi(
+                [c2.range_to(c1, 12), c1.range_to(c2, 12)], duration=8)
+
+        self.bloom.fade_all()
+
+    def fade_cycle(self):
+        colors = [
+            ("OrangeRed", "SeaGreen"),
+            ("DarkGreen", "Indigo"),
+            ("MediumPurple", "White"),
+            ("MediumBlue", "MediumVioletRed"),
+            ("SaddleBrown", "Yellow"),
+        ]
+        start = perf_counter()
+        while perf_counter() - start < 60:
+            c1, c2 = colors[randrange(0, len(colors))]
+            self.bloom.fade(Colors(c1).range_to(Colors(c2), 30), duration=12)
+            self.bloom.fade(Colors(c2).range_to(Colors(c1), 30), duration=12)
 
         self.bloom.fade_all()

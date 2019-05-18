@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from multiprocessing import Process
+from random import randint
 
 from bloom.bloom import LuminousBloom
 from animations.animations import Animations
@@ -23,9 +24,11 @@ def main():
 
         animates.gradient_spin()
 
-        animates.image("images/circle_2.jpg")
+        animates.image("images/circles/{}.jpg".format(randint(1, 8)))
 
         animates.cycle_even_and_odds()
+
+        animates.speckle_even_and_odds()
 
         animates.image("images/waves.jpg")
 
@@ -35,7 +38,7 @@ def main():
 
         animates.shimmer_with_time()
 
-        animates.speckle_even_and_odds()
+        animates.fade_cycle()
 
         animates.shimmer_heartbeat()
 

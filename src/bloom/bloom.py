@@ -502,3 +502,53 @@ class LuminousBloom(object):
                 self.pixels = self.tentacles[t].patternize(self.pixels, line)
 
             self.write_pixels(duration / 120)
+
+    def waterfall(self, color_or_list, saturation=25, length=32, seconds=120):
+        seeds = []
+
+        def fade(pixel):
+            r, g, b = self.pixels[pixel]
+            return (
+                0 if r <= 20 else round(r - (r * length / 256)),
+                0 if g <= 20 else round(g - (g * length / 256)),
+                0 if b <= 20 else round(b - (b * length / 256))
+            )
+
+        def tail(t, pixel, length, color):
+            start, end = self.tentacles[t].dims()
+
+            pixel_start = start + pixel
+            if self.tentacles[t].contains(pixel_start):
+                self.pixels[pixel_start] = color.rgb
+
+            for p in range(pixel_start, end):
+                if self.tentacles[t].contains(p) and self.tentacles[t].contains(p + 1):
+                    self.pixels[p + 1] = fade(p)
+
+                if p < start:
+                    self.pixels[start] = fade(start)
+
+        count = 0
+        start_time = perf_counter()
+        while perf_counter() - start_time < seconds:
+            if random.randint(0, 100) > 100 - saturation:
+                if isinstance(color_or_list, list):
+                    rnd = random.randrange(0, len(color_or_list))
+                    seeds.append((random.randint(1, 6), 63 +
+                                  length, color_or_list[rnd]))
+                else:
+                    seeds.append(
+                        (random.randint(1, 6), 63 + length, color_or_list))
+
+            for si, seed in enumerate(seeds):
+                tentacle, p, color = seed
+
+                if p + length - 1 < 0:
+                    seeds.pop(0)
+                else:
+                    tail(tentacle, p, length, color)
+                    seeds[si] = (tentacle, p - 1, color)
+
+            count += 1
+
+            self.write_pixels(1/60)

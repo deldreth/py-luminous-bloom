@@ -10,6 +10,8 @@ bloom = LuminousBloom()
 animates = Animations(bloom)
 
 while True:
+    animates.shower()
+
     animates.image("images/bounces/bounces_{}.jpg".format(randint(1, 4)))
 
     animates.swipe_multi_increment()
@@ -42,6 +44,8 @@ while True:
 
     animates.shimmer_with_time()
 
+    animates.waterfall_rainbow()
+
     animates.fade_cycle()
 
     animates.image("images/lantern.jpg")
@@ -57,6 +61,8 @@ while True:
     animates.meteor_rotate()
 
     animates.fade_even_and_odds()
+
+    animates.waterfall()
 
     bloom.flicker(duration=60)
 

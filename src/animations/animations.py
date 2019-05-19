@@ -247,3 +247,19 @@ class Animations():
             self.bloom.fade(Colors(c2).range_to(Colors(c1), 30), duration=12)
 
         self.bloom.fade_all()
+
+    def waterfall(self):
+        color = Colors(self.colors[randrange(0, len(self.colors))])
+        self.bloom.waterfall(color)
+        self.bloom.fade_all()
+
+    def shower(self):
+        color = Colors(self.colors[randrange(0, len(self.colors))])
+        self.bloom.waterfall(color, saturation=99)
+        self.bloom.fade_all()
+
+    def waterfall_rainbow(self):
+        colors = [Colors(x) for x in self.colors]
+
+        self.bloom.waterfall(colors)
+        self.bloom.fade_all()

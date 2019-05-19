@@ -26,6 +26,8 @@ while True:
 
     animates.image("images/circle_1.jpg")
 
+    animates.gusher()
+
     animates.gradient_spin()
 
     animates.image("images/circles/{}.jpg".format(randint(1, 8)))
@@ -40,6 +42,8 @@ while True:
 
     animates.fast_drops()
 
+    animates.gusher(True)
+
     animates.image("images/water.jpg")
 
     animates.shimmer_with_time()
@@ -47,6 +51,8 @@ while True:
     animates.waterfall_rainbow()
 
     animates.fade_cycle()
+
+    animates.shower(True)
 
     animates.image("images/lantern.jpg")
 
@@ -57,6 +63,8 @@ while True:
     animates.image("images/holes/hole_{}.jpg".format(randint(1, 4)))
 
     animates.meteors()
+
+    animates.waterfall(True)
 
     animates.meteor_rotate()
 

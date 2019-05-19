@@ -248,18 +248,28 @@ class Animations():
 
         self.bloom.fade_all()
 
-    def waterfall(self):
+    def waterfall(self, highlight=False):
         color = Colors(self.colors[randrange(0, len(self.colors))])
-        self.bloom.waterfall(color)
+        self.bloom.waterfall(color, highlight)
         self.bloom.fade_all()
 
-    def shower(self):
+    def shower(self, highlight=False):
         color = Colors(self.colors[randrange(0, len(self.colors))])
-        self.bloom.waterfall(color, saturation=99)
+        self.bloom.waterfall(color, highlight, saturation=99)
         self.bloom.fade_all()
 
     def waterfall_rainbow(self):
         colors = [Colors(x) for x in self.colors]
 
         self.bloom.waterfall(colors)
+        self.bloom.fade_all()
+
+    def geyser(self, highlight=False):
+        color = Colors(self.colors[randrange(0, len(self.colors))])
+        self.bloom.geyser(color, highlight)
+        self.bloom.fade_all()
+
+    def gusher(self, highlight=False):
+        color = Colors(self.colors[randrange(0, len(self.colors))])
+        self.bloom.geyser(color, highlight, saturation=99)
         self.bloom.fade_all()

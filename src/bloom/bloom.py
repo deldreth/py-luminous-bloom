@@ -503,42 +503,46 @@ class LuminousBloom(object):
 
             self.write_pixels(duration / 120)
 
-    def waterfall(self, color_or_list, saturation=25, length=32, seconds=120):
+    @classmethod
+    def __enseed(self, color_or_list, offset):
+        tentacle = self.tentacles[random.randint(1, 6)]
+        if isinstance(color_or_list, list):
+            return (tentacle, offset, color_or_list[random.randrange(0, len(color_or_list))])
+        else:
+            return (tentacle, offset, color_or_list)
+
+    @classmethod
+    def __tail_fade(self, pixel, length):
+        r, g, b = pixel
+        return (
+            0 if r <= 20 else round(r - (r * length / 256)),
+            0 if g <= 20 else round(g - (g * length / 256)),
+            0 if b <= 20 else round(b - (b * length / 256))
+        )
+
+    def waterfall(self, color_or_list, highlight_lead=False, saturation=25, length=32, seconds=120):
         seeds = []
 
-        def fade(pixel):
-            r, g, b = self.pixels[pixel]
-            return (
-                0 if r <= 20 else round(r - (r * length / 256)),
-                0 if g <= 20 else round(g - (g * length / 256)),
-                0 if b <= 20 else round(b - (b * length / 256))
-            )
-
-        def tail(t, pixel, length, color):
-            start, end = self.tentacles[t].dims()
+        def tail(tentacle, pixel, length, color):
+            start, end = tentacle.dims()
 
             pixel_start = start + pixel
-            if self.tentacles[t].contains(pixel_start):
+            if tentacle.contains(pixel_start):
                 self.pixels[pixel_start] = color.rgb
 
             for p in range(pixel_start, end):
-                if self.tentacles[t].contains(p) and self.tentacles[t].contains(p + 1):
-                    self.pixels[p + 1] = fade(p)
+                if tentacle.contains(p) and tentacle.contains(p + 1):
+                    self.pixels[p +
+                                1] = self.__tail_fade(self.pixels[p], length)
 
                 if p < start:
-                    self.pixels[start] = fade(start)
+                    self.pixels[start] = self.__tail_fade(
+                        self.pixels[start], length)
 
-        count = 0
         start_time = perf_counter()
         while perf_counter() - start_time < seconds:
             if random.randint(0, 100) > 100 - saturation:
-                if isinstance(color_or_list, list):
-                    rnd = random.randrange(0, len(color_or_list))
-                    seeds.append((random.randint(1, 6), 63 +
-                                  length, color_or_list[rnd]))
-                else:
-                    seeds.append(
-                        (random.randint(1, 6), 63 + length, color_or_list))
+                seeds.append(self.__enseed(color_or_list, 63 + length))
 
             for si, seed in enumerate(seeds):
                 tentacle, p, color = seed
@@ -549,6 +553,47 @@ class LuminousBloom(object):
                     tail(tentacle, p, length, color)
                     seeds[si] = (tentacle, p - 1, color)
 
-            count += 1
+                    if highlight_lead and tentacle.contains(tentacle.start + p):
+                        self.pixels[tentacle.start + p] = (255, 255, 255)
+
+            self.write_pixels(1/60)
+
+    def geyser(self, color_or_list, highlight_lead=False, saturation=25, length=32, seconds=120):
+        seeds = []
+
+        seeds.append(self.__enseed(color_or_list, 0 - length))
+
+        def tail(tentacle, pixel, length, color):
+            start, end = tentacle.dims()
+
+            pixel_start = start + pixel
+            if tentacle.contains(pixel_start):
+                self.pixels[pixel_start] = color.rgb
+
+            for p in range(pixel_start - length, pixel_start):
+                if tentacle.contains(p - 1):
+                    self.pixels[p -
+                                1] = self.__tail_fade(self.pixels[p - 1], length)
+
+                if p > end:
+                    self.pixels[end] = self.__tail_fade(
+                        self.pixels[end], length)
+
+        start_time = perf_counter()
+        while perf_counter() - start_time < seconds:
+            if random.randint(0, 100) > 100 - saturation:
+                seeds.append(self.__enseed(color_or_list, 0 - length))
+
+            for si, seed in enumerate(seeds):
+                tentacle, p, color = seed
+
+                if p > tentacle.end + p:
+                    seeds.pop(0)
+                else:
+                    tail(tentacle, p, length, color)
+                    seeds[si] = (tentacle, p + 1, color)
+
+                    if highlight_lead and tentacle.contains(tentacle.start + p + 1):
+                        self.pixels[tentacle.start + p + 1] = (255, 255, 255)
 
             self.write_pixels(1/60)

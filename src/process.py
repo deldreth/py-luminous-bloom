@@ -1,77 +1,56 @@
 #!/usr/bin/env python
 
-from random import randint
+from random import randint, randrange
 
 from bloom.bloom import LuminousBloom
 from animations.animations import Animations
-from bloom.color import Colors
 
 bloom = LuminousBloom()
 animates = Animations(bloom)
 
+animations = [
+    (animates.swipe_and_stripe, None),
+    (animates.swipe_multi_increment, None),
+    (animates.cycle_all, None),
+    (animates.cycle_even_and_odds, None),
+    (animates.fade_cycle, None),
+    (animates.fade_even_and_odds, None),
+    (animates.gradient_spin, None),
+    (animates.gradient_spin_three, None),
+    (animates.speckle_even_and_odds, None),
+    (animates.fast_drops, None),
+    (animates.shimmer_with_time, None),
+    (animates.shimmer_heartbeat, None),
+    (animates.meteors, None),
+    (animates.meteor_rotate, None),
+    (animates.waterfall, None),
+    (animates.waterfall, True),
+    (animates.waterfall_rainbow, None),
+    (animates.gusher, None),
+    (animates.gusher, True),
+    (animates.shower, None),
+    (animates.shower, True),
+    (animates.flicker, None),
+    (animates.image, "images/lantern.jpg"),
+    (animates.image, "images/water.jpg"),
+    (animates.image, "images/waves.jpg"),
+    (animates.image, "images/color_waves.jpg"),
+    (animates.image, "images/watermelon.jpg"),
+    (animates.image, "images/circle_1.jpg"),
+    (animates.image, lambda: "images/circles/{}.jpg".format(randint(1, 8))),
+    (animates.image, lambda: "images/diamonds/diamond_{}.jpg".format(randint(1, 2))),
+    (animates.image, lambda: "images/bounces/bounces_{}.jpg".format(randint(1, 4))),
+    (animates.image, lambda: "images/holes/hole_{}.jpg".format(randint(1, 4)))
+]
+
+print("Starting for {} animations.".format(len(animations)))
+
 while True:
-    animates.shower()
+    func, args = animations[randrange(0, len(animations))]
 
-    animates.image("images/bounces/bounces_{}.jpg".format(randint(1, 4)))
-
-    animates.swipe_multi_increment()
-
-    animates.image("images/color_waves.jpg")
-
-    animates.cycle_all()
-
-    animates.image("images/watermelon.jpg")
-
-    animates.swipe_and_stripe()
-
-    animates.image("images/circle_1.jpg")
-
-    animates.gusher()
-
-    animates.gradient_spin()
-
-    animates.image("images/circles/{}.jpg".format(randint(1, 8)))
-
-    animates.cycle_even_and_odds()
-
-    animates.image("images/diamonds/diamond_{}.jpg".format(randint(1, 2)))
-
-    animates.speckle_even_and_odds()
-
-    animates.image("images/waves.jpg")
-
-    animates.fast_drops()
-
-    animates.gusher(True)
-
-    animates.image("images/water.jpg")
-
-    animates.shimmer_with_time()
-
-    animates.waterfall_rainbow()
-
-    animates.fade_cycle()
-
-    animates.shower(True)
-
-    animates.image("images/lantern.jpg")
-
-    animates.shimmer_heartbeat()
-
-    animates.gradient_spin_three()
-
-    animates.image("images/holes/hole_{}.jpg".format(randint(1, 4)))
-
-    animates.meteors()
-
-    animates.waterfall(True)
-
-    animates.meteor_rotate()
-
-    animates.fade_even_and_odds()
-
-    animates.waterfall()
-
-    bloom.flicker(duration=60)
-
-    bloom.fade_all()
+    if callable(args):
+        func(args())
+    elif args is not None:
+        func(args)
+    else:
+        func()

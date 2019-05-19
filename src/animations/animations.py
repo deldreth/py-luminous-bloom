@@ -9,6 +9,7 @@ from bloom.color import Colors
 
 
 class Animations():
+    time = 60
     odds = [1, 3, 5]
     evens = [2, 4, 6]
     colors = ["MediumBlue", "MediumSpringGreen",
@@ -33,7 +34,7 @@ class Animations():
         ]
 
         start = perf_counter()
-        while perf_counter() - start < 120:
+        while perf_counter() - start < self.time * 2:
             color1, color2 = colors[randrange(0, len(colors))]
 
             for x in range(1, 3):
@@ -85,7 +86,7 @@ class Animations():
 
         count = 0
         start = perf_counter()
-        while perf_counter() - start < 60:
+        while perf_counter() - start < self.time:
             c1, c2 = colors[count]
             range_to = list(c1.range_to(c2, 32))
             color_list = range_to + list(reversed(range_to[0:31]))
@@ -113,7 +114,7 @@ class Animations():
         ]
 
         start = perf_counter()
-        while perf_counter() - start < 60:
+        while perf_counter() - start < self.time:
             c1, c2 = colors[randrange(0, len(colors))]
             range_to = list(c1.range_to(c2, 32))
             color_list = range_to + list(reversed(range_to[0:31]))
@@ -125,7 +126,7 @@ class Animations():
 
     def fast_drops(self):
         start = perf_counter()
-        while perf_counter() - start < 60:
+        while perf_counter() - start < self.time:
             color = Colors(self.colors[randrange(0, len(self.colors))])
             seed = randrange(0, 64)
             self.bloom.ripple(color, seed=seed, fade_out=0.88, duration=1.75)
@@ -140,7 +141,7 @@ class Animations():
                 c2, tentacles=self.odds, duration=duration)
 
         start = perf_counter()
-        while perf_counter() - start < 60:
+        while perf_counter() - start < self.time:
             c1 = Colors(self.colors[randrange(0, len(self.colors))])
             c2 = Colors(self.colors[randrange(0, len(self.colors))])
             r = randrange(0, 6)
@@ -162,7 +163,7 @@ class Animations():
 
         count = 0
         start = perf_counter()
-        while perf_counter() - start < 60:
+        while perf_counter() - start < self.time:
             for color in colors[count]:
                 self.bloom.shimmer_pulse(color, duration=0.3)
                 self.bloom.shimmer_pulse(color, duration=1.25)
@@ -177,7 +178,7 @@ class Animations():
     def speckle_even_and_odds(self):
         start = perf_counter()
         storage = {}
-        while perf_counter() - start < 60:
+        while perf_counter() - start < self.time:
             c1 = Colors(self.colors[randrange(0, len(self.colors))])
             c2 = Colors(self.colors[randrange(0, len(self.colors))])
 
@@ -189,7 +190,7 @@ class Animations():
 
     def meteors(self):
         start = perf_counter()
-        while perf_counter() - start < 60:
+        while perf_counter() - start < self.time:
             color = self.colors[randrange(0, len(self.colors))]
             self.bloom.meteor(Colors(color), duration=2)
 
@@ -204,7 +205,7 @@ class Animations():
 
     def meteor_rotate(self):
         start = perf_counter()
-        while perf_counter() - start < 60:
+        while perf_counter() - start < self.time:
             for t in self.bloom.tentacles:
                 color = Colors(self.colors[randrange(0, len(self.colors))])
                 self.bloom.meteor(color, tentacles=[
@@ -214,14 +215,14 @@ class Animations():
 
     def image(self, path):
         start = perf_counter()
-        while perf_counter() - start < 60:
+        while perf_counter() - start < self.time:
             self.bloom.image(path, duration=5)
 
         self.bloom.fade_all()
 
     def fade_even_and_odds(self):
         start = perf_counter()
-        while perf_counter() - start < 60:
+        while perf_counter() - start < self.time:
             c1 = Colors("Red")
             c2 = Colors("Blue")
 
@@ -241,7 +242,7 @@ class Animations():
             ("SaddleBrown", "Yellow"),
         ]
         start = perf_counter()
-        while perf_counter() - start < 60:
+        while perf_counter() - start < self.time:
             c1, c2 = colors[randrange(0, len(colors))]
             self.bloom.fade(Colors(c1).range_to(Colors(c2), 30), duration=12)
             self.bloom.fade(Colors(c2).range_to(Colors(c1), 30), duration=12)
@@ -250,26 +251,31 @@ class Animations():
 
     def waterfall(self, highlight=False):
         color = Colors(self.colors[randrange(0, len(self.colors))])
-        self.bloom.waterfall(color, highlight)
+        self.bloom.waterfall(color, highlight, seconds=self.time)
         self.bloom.fade_all()
 
     def shower(self, highlight=False):
         color = Colors(self.colors[randrange(0, len(self.colors))])
-        self.bloom.waterfall(color, highlight, saturation=99)
+        self.bloom.waterfall(
+            color, highlight, saturation=99, seconds=self.time)
         self.bloom.fade_all()
 
     def waterfall_rainbow(self):
         colors = [Colors(x) for x in self.colors]
 
-        self.bloom.waterfall(colors)
+        self.bloom.waterfall(colors, seconds=self.time)
         self.bloom.fade_all()
 
     def geyser(self, highlight=False):
         color = Colors(self.colors[randrange(0, len(self.colors))])
-        self.bloom.geyser(color, highlight)
+        self.bloom.geyser(color, highlight, seconds=self.time)
         self.bloom.fade_all()
 
     def gusher(self, highlight=False):
         color = Colors(self.colors[randrange(0, len(self.colors))])
-        self.bloom.geyser(color, highlight, saturation=99)
+        self.bloom.geyser(color, highlight, saturation=99, seconds=self.time)
+        self.bloom.fade_all()
+
+    def flicker(self):
+        self.bloom.flicker(duration=60)
         self.bloom.fade_all()

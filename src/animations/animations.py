@@ -33,16 +33,25 @@ class Animations():
         ]
 
         start = perf_counter()
-        while perf_counter() - start < 60:
+        while perf_counter() - start < 120:
             color1, color2 = colors[randrange(0, len(colors))]
 
-            for x in range(1, 4):
+            for x in range(1, 3):
                 color_range = list(color1.range_to(color2, 4 * x))
                 self.bloom.swipe_blob(color1, duration=1)
-                self.bloom.stripe(color_range, length=len(
-                    color_range), duration=10)
+                for d in range(10, 2, -1):
+                    self.bloom.stripe(color_range, length=len(
+                        color_range), duration=d)
 
         self.bloom.fade_all()
+
+    def swipe_multi_increment(self):
+        range1 = list(Colors("Red").range_to(Colors("Blue"), 8))
+        range2 = list(reversed(range1))
+
+        start = perf_counter()
+        while perf_counter() - start < 30:
+            self.bloom.stripe_multi([range1, range2], duration=5)
 
     def gradient_spin(self):
         start = perf_counter()
@@ -52,6 +61,16 @@ class Animations():
             color_range = list(Colors(color1).range_to(Colors(color2), 64))
             for x in range(1, 5):
                 self.bloom.rotate(color_range, duration=x * 3)
+
+    def gradient_spin_three(self):
+        start = perf_counter()
+        while perf_counter() - start < 30:
+            color1 = self.colors[randrange(0, len(self.colors))]
+            color2 = self.colors[randrange(0, len(self.colors))]
+            color_range = list(Colors(color1).range_to(Colors(color2), 64))
+
+            for d in range(15, 5, -1):
+                self.bloom.rotate_three(color_range, duration=d)
 
     def cycle_even_and_odds(self):
         colors = [

@@ -70,6 +70,22 @@ class LuminousBloom(object):
 
             self.write_pixels(duration / 120)
 
+    def rotate_three(self, color, loops=1, direction=Direction.RIGHT, duration=10):
+        color = range_or_luminance(color, 64)
+
+        evens = True
+        for _ in range(0, len(self.tentacles)):
+            for ti, t in self.tentacles.items():
+                if evens and ti % 2 == 0:
+                    self.pixels = t.patternize(self.pixels, color)
+                elif not evens and ti % 2 != 0:
+                    self.pixels = t.patternize(self.pixels, color)
+                else:
+                    self.pixels = t.colorize(self.pixels, (0, 0, 0))
+
+            evens = not evens
+            self.write_pixels(duration / 120)
+
     def swipe(self, color, tentacles=[1, 2, 3, 4, 5, 6], direction=Direction.UP, duration=1):
         rng = range(self.__l)
 
@@ -148,6 +164,30 @@ class LuminousBloom(object):
                     self.pixels, pattern)
 
             pattern.shift(step)
+
+            self.write_pixels(duration / 120)
+
+    def stripe_multi(self, list_of_ranges, length=8, step=2, tentacles=[[1, 3, 5], [2, 4, 6]], duration=1):
+        """Patternize any tentacle with a color range separated by black of the same length
+
+        color_or_range -- A single color or range of colors
+        length -- The length of the stripe. If color_or_range is a range of colors then length must be equal to its length.
+        step -- The number of pixels to adjust the pattern during animation
+        """
+        pattern1 = Pattern(length, list_of_ranges[0])
+        pattern2 = Pattern(length, list_of_ranges[1])
+
+        for _ in range(self.__l):
+            for t in tentacles[0]:
+                self.pixels = self.tentacles[t].patternize(
+                    self.pixels, pattern1)
+
+            for t in tentacles[1]:
+                self.pixels = self.tentacles[t].patternize(
+                    self.pixels, pattern2)
+
+            pattern1.shift(step)
+            pattern2.shift(step)
 
             self.write_pixels(duration / 120)
 

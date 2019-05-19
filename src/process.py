@@ -4,11 +4,16 @@ from random import randint
 
 from bloom.bloom import LuminousBloom
 from animations.animations import Animations
+from bloom.color import Colors
 
 bloom = LuminousBloom()
 animates = Animations(bloom)
 
 while True:
+    animates.image("images/bounces/bounces_{}.jpg".format(randint(1, 4)))
+
+    animates.swipe_multi_increment()
+
     animates.image("images/color_waves.jpg")
 
     animates.cycle_all()
@@ -25,6 +30,8 @@ while True:
 
     animates.cycle_even_and_odds()
 
+    animates.image("images/diamonds/diamond_{}.jpg".format(randint(1, 2)))
+
     animates.speckle_even_and_odds()
 
     animates.image("images/waves.jpg")
@@ -37,7 +44,13 @@ while True:
 
     animates.fade_cycle()
 
+    animates.image("images/lantern.jpg")
+
     animates.shimmer_heartbeat()
+
+    animates.gradient_spin_three()
+
+    animates.image("images/holes/hole_{}.jpg".format(randint(1, 4)))
 
     animates.meteors()
 

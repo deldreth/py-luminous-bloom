@@ -31,12 +31,13 @@ animations = [
     (animates.shower, None),
     (animates.shower, True),
     (animates.flicker, None),
-    (animates.image, "images/lantern.jpg"),
     (animates.image, "images/water.jpg"),
     (animates.image, "images/waves.jpg"),
     (animates.image, "images/color_waves.jpg"),
     (animates.image, "images/watermelon.jpg"),
     (animates.image, "images/circle_1.jpg"),
+    (animates.image, lambda: "images/lanterns/lantern_{}.jpg".format(randint(1, 3))),
+    (animates.image, lambda: "images/flares/flare_{}.jpg".format(randint(1, 3))),
     (animates.image, lambda: "images/circles/{}.jpg".format(randint(1, 8))),
     (animates.image, lambda: "images/diamonds/diamond_{}.jpg".format(randint(1, 2))),
     (animates.image, lambda: "images/bounces/bounces_{}.jpg".format(randint(1, 4))),
@@ -45,8 +46,20 @@ animations = [
 
 print("Starting for {} animations.".format(len(animations)))
 
+previous = []
+
+
+def pick_animation():
+    index = randrange(0, len(animations))
+    if index in previous:
+        return pick_animation()
+
+    previous.append(index)
+    return animations[index]
+
+
 while True:
-    func, args = animations[randrange(0, len(animations))]
+    func, args = pick_animation()
 
     if callable(args):
         func(args())
@@ -54,3 +67,6 @@ while True:
         func(args)
     else:
         func()
+
+    if len(previous) == len(animations):
+        previous = []

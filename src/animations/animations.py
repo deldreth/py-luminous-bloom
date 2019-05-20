@@ -40,7 +40,7 @@ class Animations():
             for x in range(1, 3):
                 color_range = list(color1.range_to(color2, 4 * x))
                 self.bloom.swipe_blob(color1, duration=1)
-                for d in range(10, 2, -1):
+                for d in range(10, 4, -1):
                     self.bloom.stripe(color_range, length=len(
                         color_range), duration=d)
 
@@ -56,7 +56,7 @@ class Animations():
 
     def gradient_spin(self):
         start = perf_counter()
-        while perf_counter() - start < 30:
+        while perf_counter() - start < self.time / 2:
             color1 = self.colors[randrange(0, len(self.colors))]
             color2 = self.colors[randrange(0, len(self.colors))]
             color_range = list(Colors(color1).range_to(Colors(color2), 64))
@@ -65,7 +65,7 @@ class Animations():
 
     def gradient_spin_three(self):
         start = perf_counter()
-        while perf_counter() - start < 30:
+        while perf_counter() - start < self.time / 2:
             color1 = self.colors[randrange(0, len(self.colors))]
             color2 = self.colors[randrange(0, len(self.colors))]
             color_range = list(Colors(color1).range_to(Colors(color2), 64))
@@ -132,9 +132,7 @@ class Animations():
             self.bloom.ripple(color, seed=seed, fade_out=0.88, duration=1.75)
 
     def shimmer_with_time(self):
-        duration = 2
-
-        def shimmer(c1, c2):
+        def shimmer(c1, c2, duration):
             self.bloom.shimmer_pulse(
                 c1, tentacles=self.evens, duration=duration)
             self.bloom.shimmer_pulse(
@@ -144,15 +142,9 @@ class Animations():
         while perf_counter() - start < self.time:
             c1 = Colors(self.colors[randrange(0, len(self.colors))])
             c2 = Colors(self.colors[randrange(0, len(self.colors))])
-            r = randrange(0, 6)
 
-            for _ in range(r):
-                shimmer(c1, c2)
-                duration /= 2
-
-            for _ in range(r):
-                shimmer(c1, c2)
-                duration *= 2
+            for _ in range(10):
+                shimmer(c1, c2, 0.25)
 
         self.bloom.fade_all()
 
@@ -206,10 +198,14 @@ class Animations():
     def meteor_rotate(self):
         start = perf_counter()
         while perf_counter() - start < self.time:
-            for t in self.bloom.tentacles:
+            for _ in self.bloom.tentacles:
                 color = Colors(self.colors[randrange(0, len(self.colors))])
-                self.bloom.meteor(color, tentacles=[
-                                  t], fade=15, duration=0.25)
+                self.bloom.meteor(color, tentacles=self.evens,
+                                  fade=8, duration=0.10)
+
+                color = Colors(self.colors[randrange(0, len(self.colors))])
+                self.bloom.meteor(color, tentacles=self.odds,
+                                  fade=8, duration=0.15)
 
         self.bloom.fade_all()
 

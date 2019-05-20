@@ -587,7 +587,7 @@ class LuminousBloom(object):
             for si, seed in enumerate(seeds):
                 tentacle, p, color = seed
 
-                if p > tentacle.end + p:
+                if tentacle.start + p > tentacle.end + length:
                     seeds.pop(0)
                 else:
                     tail(tentacle, p, length, color)

@@ -9,7 +9,7 @@ from time import sleep, perf_counter
 
 
 from .tentacle import Tentacle
-from .color import wheel, range_or_luminance, Colors
+from .color import range_or_luminance, Colors
 from .pattern import Pattern, Range
 from .image import Image
 

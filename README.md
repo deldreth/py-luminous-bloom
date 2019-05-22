@@ -16,20 +16,28 @@ An Ignite! granted funded project.
     - [OPC (OpenPixelControl)](#opc--openpixelcontrol-)
     - [Running Tests](#running-tests)
     - [Running](#running)
-- [Colors](#colors)
-  - [Ranges](#ranges)
+- [Structure](#structure)
+  - [Process](#process)
+  - [Animations](#animations)
+  - [Tentacles](#tentacles)
+  - [Bloom](#bloom)
+    - [Transitions](#transitions)
+  - [Colors](#colors)
+    - [Patterns](#patterns)
+    - [Ranges](#ranges)
 
 ## Media
 
 ### YouTube
 
-![Test 1](https://youtu.be/UHGA_CBlYU4)
-![Test 2](https://youtu.be/GV5ze9NrJMw)
-![Test 3](https://youtu.be/7AvBYTMB8QI)
+[Test 1](https://youtu.be/UHGA_CBlYU4)
+
+[Test 2](https://youtu.be/GV5ze9NrJMw)
+
+[Test 3](https://youtu.be/7AvBYTMB8QI)
 
 ## Todo
 
-- [x] Gamma corrected color wheel func
 - [x] All tentacles swipe up
 - [x] All tentacles fill up
 - [x] Tentacles can receive repeating patterns
@@ -136,18 +144,55 @@ python -m unittest discover -v ./src
 #### Running
 
 ```
-python src/luminous-bloom.py
+python src/process.py
 ```
 
-## Colors
+## Structure
 
-This library depends upon the Colours library and extends that library's class to provide a few utilities where rgb values are needed from 0..255 instead of 0..1.
+### Process
 
-### Ranges
+Entry point to start the animations. All available animations are part of a list of tuples. The first item of the tuple is a reference to the animation function, the second item is either the parameters to pass to the function or a lambda that will be executed (usually for dynamic/randomized parameters).
 
-Color ranges can be approximated with HSL values between two colors...
+The process will run through the entire list of animations, randomized. Once it has finished the last it will reset and start again.
+
+### Animations
+
+The `animations` package contains multi functions used to sequence a series of bloom transitions. It also specifies the colors available to the LEDs and deals with timing for most animations.
+
+### Tentacles
+
+Analogous to a strand of LEDs. Each tentacle is 64 pixels in length, has a start and end pixel, and some notion of "which" tentacle it is.
+
+Tentacles can patternize and colorize the pixels they contain relative to the whole list of pixels. There are also safety methods like `contains` to determine if a pixel value exists on a tentacle.
+
+### Bloom
+
+The `bloom.bloom` package contains all the pixel information, references to tentacles, and all the transitions available to animations. In general, transitions are choreographed list traversal algorithms that selectively set colors by mapping a value relative to a tentacle's pixel.
+
+#### Transitions
+
+**Images**, the `./images` directory contains a number if images used in transitions. These are read vertically from top to bottom. Each line's pixels mapped to a pixel on a tentacle.
+
+### Colors
+
+This library depends upon the Colours library and extends that library's class to provide a few utilities where rgb values are needed from 0..255 instead of 0..1. The Colours library provies a range_to method to calculate the colors between two colors.
 
 ```python
-# a list of 5 colors stepped between red and blue
-colors = list(Color("red").range_to(Color("blue"), 5))
+# a generator of 5 colors stepped between red and blue
+colors = Color("Red").range_to(Color("Blue"), 5)
 ```
+
+The `bloom.color` package contains two utlity classes: Pattern and Range. Both of which are deques intended to be used for higher performance list rotation operations.
+
+#### Patterns
+
+Patterns are deques composed of a single color or list of colors separated by black, all of the same length. For instance, a pattern created with White and length of 5 would create a deque in the shape of:
+
+```python
+pattern = Pattern(5, Colors("White"))
+# pattern => ([(White), (White), (White), (White), (White), (Black), (Black), (Black), (Black), (Black), (White), (White), (White), (White), (White), ...])
+```
+
+#### Ranges
+
+A deque composed of a list of colors.

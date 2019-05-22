@@ -4,6 +4,8 @@ An Ignite! granted funded project.
 
 [![PyPI pyversions](https://img.shields.io/badge/python-3.6-blue.svg)](https://www.python.org/downloads/release/python-360/)
 
+- [Media](#media)
+  - [YouTube](#youtube)
 - [Todo](#todo)
 - [Setup](#setup)
   - [Installation](#installation)
@@ -16,6 +18,14 @@ An Ignite! granted funded project.
     - [Running](#running)
 - [Colors](#colors)
   - [Ranges](#ranges)
+
+## Media
+
+### YouTube
+
+![Test 1](https://youtu.be/UHGA_CBlYU4)
+![Test 2](https://youtu.be/GV5ze9NrJMw)
+![Test 3](https://youtu.be/7AvBYTMB8QI)
 
 ## Todo
 
@@ -35,7 +45,7 @@ An Ignite! granted funded project.
 - [x] Animations expressed in seconds/minutes
 - [x] Raspberry Pi Setup
 - [x] Supervisor Setup
-- [ ] Duration test
+- [x] Duration test (Approx. 20 hours)
 
 ## Setup
 

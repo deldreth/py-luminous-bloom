@@ -4,7 +4,6 @@ import opc
 import random
 import math
 import types
-from enum import Enum
 from time import sleep, perf_counter
 
 
@@ -12,16 +11,11 @@ from .tentacle import Tentacle
 from .color import range_or_luminance, Colors
 from .pattern import Pattern, Range
 from .image import Image
-
-
-class Direction(Enum):
-    UP = "up"
-    DOWN = "down"
-    LEFT = "left"
-    RIGHT = "right"
+from .direction import Direction
 
 
 class LuminousBloom(object):
+    """Everything what's good."""
     __l = 64
     total_pixels = 385
     tentacles = {

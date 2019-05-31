@@ -4,274 +4,298 @@ from functools import wraps
 from random import randrange
 from time import perf_counter
 
-from bloom.bloom import LuminousBloom, Direction
+from bloom.direction import Direction
 from bloom.color import Colors
 
+time = 60 # Default time for any animation. A few double this.
+odds = [1, 3, 5]
+evens = [2, 4, 6]
+"""Whuat"""
+colors = ["MediumBlue", "MediumSpringGreen", "Lime", "ForestGreen",
+          "Turquoise", "MidnightBlue", "DarkGreen", "Indigo", "BlueViolet",
+          "MediumVioletRed", "Aquamarine", "Magenta", "DeepPink",
+          "HotPink", "FireBrick", "SaddleBrown", "DarkGoldenrod",
+          "OrangeRed", "DarkOrange", "Gold", "SeaGreen", "DarkBlue"]
 
-class Animations():
-    time = 60
-    odds = [1, 3, 5]
-    evens = [2, 4, 6]
-    colors = ["MediumBlue", "MediumSpringGreen",
-              "Lime", "ForestGreen", "Turquoise",
-              "MidnightBlue", "DarkGreen", "Indigo",
-              "BlueViolet", "MediumVioletRed",
-              "Aquamarine", "Magenta", "DeepPink",
-              "HotPink", "FireBrick", "SaddleBrown",
-              "DarkGoldenrod", "OrangeRed", "DarkOrange",
-              "Gold", "SeaGreen", "DarkBlue"]
 
-    def __init__(self, bloom):
-        self.bloom = bloom
+def random_color(previous_color):
+    """With any available color, ensure that a different random color is returned"""
+    next_color = previous_color
 
-    def swipe_and_stripe(self):
-        colors = [
-            (Colors("OrangeRed"), Colors("SeaGreen")),
-            (Colors("DarkGreen"), Colors("Indigo")),
-            (Colors("MediumPurple"), Colors("White")),
-            (Colors("MediumBlue"), Colors("MediumVioletRed")),
-            (Colors("SaddleBrown"), Colors("Yellow")),
-        ]
+    while next_color is not previous_color:
+        next_color = colors[randrange(0, len(colors))]
 
-        start = perf_counter()
-        while perf_counter() - start < self.time * 2:
-            color1, color2 = colors[randrange(0, len(colors))]
+    return next_color
 
-            for x in range(1, 3):
-                color_range = list(color1.range_to(color2, 4 * x))
-                self.bloom.swipe_blob(color1, duration=1)
-                for d in range(10, 4, -1):
-                    self.bloom.stripe(color_range, length=len(
-                        color_range), duration=d)
 
-        self.bloom.fade_all()
+def swipe_and_stripe(bloom):
+    colors = [
+        (Colors("OrangeRed"), Colors("SeaGreen")),
+        (Colors("DarkGreen"), Colors("Indigo")),
+        (Colors("MediumPurple"), Colors("White")),
+        (Colors("MediumBlue"), Colors("MediumVioletRed")),
+        (Colors("SaddleBrown"), Colors("Yellow")),
+    ]
 
-    def swipe_multi_increment(self):
-        range1 = list(Colors("Red").range_to(Colors("Blue"), 8))
-        range2 = list(reversed(range1))
+    start = perf_counter()
+    while perf_counter() - start < time * 2:
+        color1, color2 = colors[randrange(0, len(colors))]
 
-        start = perf_counter()
-        while perf_counter() - start < 30:
-            self.bloom.stripe_multi([range1, range2], duration=5)
+        for x in range(1, 3):
+            color_range = list(color1.range_to(color2, 4 * x))
+            bloom.swipe_blob(color1, duration=1)
+            for d in range(10, 4, -1):
+                bloom.stripe(color_range, length=len(
+                    color_range), duration=d)
 
-    def gradient_spin(self):
-        start = perf_counter()
-        while perf_counter() - start < self.time / 2:
-            color1 = self.colors[randrange(0, len(self.colors))]
-            color2 = self.colors[randrange(0, len(self.colors))]
-            color_range = list(Colors(color1).range_to(Colors(color2), 64))
-            for x in range(1, 5):
-                self.bloom.rotate(color_range, duration=x * 3)
+    bloom.fade_all()
 
-    def gradient_spin_three(self):
-        start = perf_counter()
-        while perf_counter() - start < self.time / 2:
-            color1 = self.colors[randrange(0, len(self.colors))]
-            color2 = self.colors[randrange(0, len(self.colors))]
-            color_range = list(Colors(color1).range_to(Colors(color2), 64))
 
-            for d in range(15, 5, -1):
-                self.bloom.rotate_three(color_range, duration=d)
+def swipe_multi_increment(bloom):
+    range1 = list(Colors("Red").range_to(Colors("Blue"), 8))
+    range2 = list(reversed(range1))
 
-    def cycle_even_and_odds(self):
-        colors = [
-            (Colors("White"), Colors("Purple")),
-            (Colors("Black"), Colors("Hotpink")),
-            (Colors("OrangeRed"), Colors("SeaGreen")),
-            (Colors("DarkGreen"), Colors("Indigo")),
-            (Colors("MediumPurple"), Colors("White")),
-            (Colors("MediumBlue"), Colors("MediumVioletRed")),
-            (Colors("SaddleBrown"), Colors("Yellow")),
-        ]
+    start = perf_counter()
+    while perf_counter() - start < 30:
+        bloom.stripe_multi([range1, range2], duration=5)
 
-        count = 0
-        start = perf_counter()
-        while perf_counter() - start < self.time:
-            c1, c2 = colors[count]
-            range_to = list(c1.range_to(c2, 32))
-            color_list = range_to + list(reversed(range_to[0:31]))
 
-            for _ in range(5):
-                self.bloom.cycle(color_list, tentacles=self.odds)
-                self.bloom.cycle(color_list, tentacles=self.evens,
-                                 direction=Direction.DOWN)
+def gradient_spin(bloom):
+    start = perf_counter()
+    while perf_counter() - start < time / 2:
+        color1 = colors[randrange(0, len(colors))]
+        color2 = colors[randrange(0, len(colors))]
+        color_range = list(Colors(color1).range_to(Colors(color2), 64))
+        for x in range(1, 5):
+            bloom.rotate(color_range, duration=x * 3)
 
-            count += 1
 
-            if count > len(colors) - 1:
-                count = 0
+def gradient_spin_three(bloom):
+    start = perf_counter()
+    while perf_counter() - start < time / 2:
+        color1 = colors[randrange(0, len(colors))]
+        color2 = colors[randrange(0, len(colors))]
+        color_range = list(Colors(color1).range_to(Colors(color2), 64))
 
-        self.bloom.fade_all()
+        for d in range(15, 5, -1):
+            bloom.rotate_three(color_range, duration=d)
 
-    def cycle_all(self):
-        colors = [
-            (Colors("Indigo"), Colors("BlueViolet")),
-            (Colors("MediumPurple"), Colors("Seagreen")),
-            (Colors("SeaGreen"), Colors("OrangeRed")),
-            (Colors("OrangeRed"), Colors("Gold")),
-            (Colors("Gold"), Colors("MediumBlue")),
-            (Colors("MediumBlue"), Colors("MidnightBlue")),
-        ]
 
-        start = perf_counter()
-        while perf_counter() - start < self.time:
-            c1, c2 = colors[randrange(0, len(colors))]
-            range_to = list(c1.range_to(c2, 32))
-            color_list = range_to + list(reversed(range_to[0:31]))
+def cycle_even_and_odds(bloom):
+    colors = [
+        (Colors("White"), Colors("Purple")),
+        (Colors("Black"), Colors("Hotpink")),
+        (Colors("OrangeRed"), Colors("SeaGreen")),
+        (Colors("DarkGreen"), Colors("Indigo")),
+        (Colors("MediumPurple"), Colors("White")),
+        (Colors("MediumBlue"), Colors("MediumVioletRed")),
+        (Colors("SaddleBrown"), Colors("Yellow")),
+    ]
 
-            for _ in range(10):
-                self.bloom.cycle(color_list, duration=2)
+    count = 0
+    start = perf_counter()
+    while perf_counter() - start < time:
+        c1, c2 = colors[count]
+        range_to = list(c1.range_to(c2, 32))
+        color_list = range_to + list(reversed(range_to[0:31]))
 
-        self.bloom.fade_all()
+        for _ in range(5):
+            bloom.cycle(color_list, tentacles=odds)
+            bloom.cycle(color_list, tentacles=evens,
+                        direction=Direction.DOWN)
 
-    def fast_drops(self):
-        start = perf_counter()
-        while perf_counter() - start < self.time:
-            color = Colors(self.colors[randrange(0, len(self.colors))])
-            seed = randrange(0, 64)
-            self.bloom.ripple(color, seed=seed, fade_out=0.88, duration=1.75)
+        count += 1
 
-    def shimmer_with_time(self):
-        def shimmer(c1, c2, duration):
-            self.bloom.shimmer_pulse(
-                c1, tentacles=self.evens, duration=duration)
-            self.bloom.shimmer_pulse(
-                c2, tentacles=self.odds, duration=duration)
+        if count > len(colors) - 1:
+            count = 0
 
-        start = perf_counter()
-        while perf_counter() - start < self.time:
-            c1 = Colors(self.colors[randrange(0, len(self.colors))])
-            c2 = Colors(self.colors[randrange(0, len(self.colors))])
+    bloom.fade_all()
 
-            for _ in range(10):
-                shimmer(c1, c2, 0.25)
 
-        self.bloom.fade_all()
+def cycle_all(bloom):
+    colors = [
+        (Colors("Indigo"), Colors("BlueViolet")),
+        (Colors("MediumPurple"), Colors("Seagreen")),
+        (Colors("SeaGreen"), Colors("OrangeRed")),
+        (Colors("OrangeRed"), Colors("Gold")),
+        (Colors("Gold"), Colors("MediumBlue")),
+        (Colors("MediumBlue"), Colors("MidnightBlue")),
+    ]
 
-    def shimmer_heartbeat(self):
-        colors = [
-            Colors("Seagreen").range_to(Colors("Deeppink"), 8)
-        ]
+    start = perf_counter()
+    while perf_counter() - start < time:
+        c1, c2 = colors[randrange(0, len(colors))]
+        range_to = list(c1.range_to(c2, 32))
+        color_list = range_to + list(reversed(range_to[0:31]))
 
-        count = 0
-        start = perf_counter()
-        while perf_counter() - start < self.time:
-            for color in colors[count]:
-                self.bloom.shimmer_pulse(color, duration=0.3)
-                self.bloom.shimmer_pulse(color, duration=1.25)
+        for _ in range(10):
+            bloom.cycle(color_list, duration=2)
 
-            count += 1
+    bloom.fade_all()
 
-            if count > len(colors) - 1:
-                count = 0
 
-        self.bloom.fade_all()
+def fast_drops(bloom):
+    start = perf_counter()
+    while perf_counter() - start < time:
+        color = Colors(colors[randrange(0, len(colors))])
+        seed = randrange(0, 64)
+        bloom.ripple(color, seed=seed, fade_out=0.88, duration=1.75)
 
-    def speckle_even_and_odds(self):
-        start = perf_counter()
-        storage = {}
-        while perf_counter() - start < self.time:
-            c1 = Colors(self.colors[randrange(0, len(self.colors))])
-            c2 = Colors(self.colors[randrange(0, len(self.colors))])
 
-            self.bloom.speckle(c1, tentacles=self.evens,
-                               maximum=16, storage=storage, duration=10)
-            self.bloom.speckle(c2, tentacles=self.odds, storage=storage)
+def shimmer_with_time(bloom):
+    def shimmer(c1, c2, duration):
+        bloom.shimmer_pulse(
+            c1, tentacles=evens, duration=duration)
+        bloom.shimmer_pulse(
+            c2, tentacles=odds, duration=duration)
 
-        self.bloom.fade_all()
+    start = perf_counter()
+    while perf_counter() - start < time:
+        c1 = Colors(colors[randrange(0, len(colors))])
+        c2 = Colors(colors[randrange(0, len(colors))])
 
-    def meteors(self):
-        start = perf_counter()
-        while perf_counter() - start < self.time:
-            color = self.colors[randrange(0, len(self.colors))]
-            self.bloom.meteor(Colors(color), duration=2)
+        for _ in range(10):
+            shimmer(c1, c2, 0.25)
 
-            color = self.colors[randrange(0, len(self.colors))]
-            self.bloom.meteor(
-                Colors(color), tentacles=self.evens, duration=0.5)
+    bloom.fade_all()
 
-            color = self.colors[randrange(0, len(self.colors))]
-            self.bloom.meteor(Colors(color), tentacles=self.odds, duration=0.5)
 
-        self.bloom.fade_all()
+def shimmer_heartbeat(bloom):
+    colors = [
+        Colors("Seagreen").range_to(Colors("Deeppink"), 8)
+    ]
 
-    def meteor_rotate(self):
-        start = perf_counter()
-        while perf_counter() - start < self.time:
-            for _ in self.bloom.tentacles:
-                color = Colors(self.colors[randrange(0, len(self.colors))])
-                self.bloom.meteor(color, tentacles=self.evens,
-                                  fade=8, duration=0.10)
+    count = 0
+    start = perf_counter()
+    while perf_counter() - start < time:
+        for color in colors[count]:
+            bloom.shimmer_pulse(color, duration=0.3)
+            bloom.shimmer_pulse(color, duration=1.25)
 
-                color = Colors(self.colors[randrange(0, len(self.colors))])
-                self.bloom.meteor(color, tentacles=self.odds,
-                                  fade=8, duration=0.15)
+        count += 1
 
-        self.bloom.fade_all()
+        if count > len(colors) - 1:
+            count = 0
 
-    def image(self, path):
-        start = perf_counter()
-        while perf_counter() - start < self.time:
-            self.bloom.image(path, duration=5)
+    bloom.fade_all()
 
-        self.bloom.fade_all()
 
-    def fade_even_and_odds(self):
-        start = perf_counter()
-        while perf_counter() - start < self.time:
-            c1 = Colors("Red")
-            c2 = Colors("Blue")
+def speckle_even_and_odds(bloom):
+    start = perf_counter()
+    storage = {}
+    while perf_counter() - start < time:
+        c1 = Colors(colors[randrange(0, len(colors))])
+        c2 = Colors(colors[randrange(0, len(colors))])
 
-            self.bloom.fade_multi(
-                [c1.range_to(c2, 12), c2.range_to(c1, 12)], duration=8)
-            self.bloom.fade_multi(
-                [c2.range_to(c1, 12), c1.range_to(c2, 12)], duration=8)
+        bloom.speckle(c1, tentacles=evens,
+                      maximum=16, storage=storage, duration=10)
+        bloom.speckle(c2, tentacles=odds, storage=storage)
 
-        self.bloom.fade_all()
+    bloom.fade_all()
 
-    def fade_cycle(self):
-        colors = [
-            ("OrangeRed", "SeaGreen"),
-            ("DarkGreen", "Indigo"),
-            ("MediumPurple", "White"),
-            ("MediumBlue", "MediumVioletRed"),
-            ("SaddleBrown", "Yellow"),
-        ]
-        start = perf_counter()
-        while perf_counter() - start < self.time:
-            c1, c2 = colors[randrange(0, len(colors))]
-            self.bloom.fade(Colors(c1).range_to(Colors(c2), 30), duration=12)
-            self.bloom.fade(Colors(c2).range_to(Colors(c1), 30), duration=12)
 
-        self.bloom.fade_all()
+def meteors(bloom):
+    start = perf_counter()
+    while perf_counter() - start < time:
+        color = colors[randrange(0, len(colors))]
+        bloom.meteor(Colors(color), duration=2)
 
-    def waterfall(self, highlight=False):
-        color = Colors(self.colors[randrange(0, len(self.colors))])
-        self.bloom.waterfall(color, highlight, seconds=self.time)
-        self.bloom.fade_all()
+        color = colors[randrange(0, len(colors))]
+        bloom.meteor(
+            Colors(color), tentacles=evens, duration=0.5)
 
-    def shower(self, highlight=False):
-        color = Colors(self.colors[randrange(0, len(self.colors))])
-        self.bloom.waterfall(
-            color, highlight, saturation=99, seconds=self.time)
-        self.bloom.fade_all()
+        color = colors[randrange(0, len(colors))]
+        bloom.meteor(Colors(color), tentacles=odds, duration=0.5)
 
-    def waterfall_rainbow(self):
-        colors = [Colors(x) for x in self.colors]
+    bloom.fade_all()
 
-        self.bloom.waterfall(colors, seconds=self.time)
-        self.bloom.fade_all()
 
-    def geyser(self, highlight=False):
-        color = Colors(self.colors[randrange(0, len(self.colors))])
-        self.bloom.geyser(color, highlight, seconds=self.time)
-        self.bloom.fade_all()
+def meteor_rotate(bloom):
+    start = perf_counter()
+    while perf_counter() - start < time:
+        for _ in bloom.tentacles:
+            color = Colors(colors[randrange(0, len(colors))])
+            bloom.meteor(color, tentacles=evens,
+                         fade=8, duration=0.10)
 
-    def gusher(self, highlight=False):
-        color = Colors(self.colors[randrange(0, len(self.colors))])
-        self.bloom.geyser(color, highlight, saturation=99, seconds=self.time)
-        self.bloom.fade_all()
+            color = Colors(colors[randrange(0, len(colors))])
+            bloom.meteor(color, tentacles=odds,
+                         fade=8, duration=0.15)
 
-    def flicker(self):
-        self.bloom.flicker(duration=60)
-        self.bloom.fade_all()
+    bloom.fade_all()
+
+
+def image(bloom, path):
+    start = perf_counter()
+    while perf_counter() - start < time:
+        bloom.image(path, duration=5)
+
+    bloom.fade_all()
+
+
+def fade_even_and_odds(bloom):
+    start = perf_counter()
+    while perf_counter() - start < time:
+        c1 = Colors("Red")
+        c2 = Colors("Blue")
+
+        bloom.fade_multi(
+            [c1.range_to(c2, 12), c2.range_to(c1, 12)], duration=8)
+        bloom.fade_multi(
+            [c2.range_to(c1, 12), c1.range_to(c2, 12)], duration=8)
+
+    bloom.fade_all()
+
+
+def fade_cycle(bloom):
+    colors = [
+        ("OrangeRed", "SeaGreen"),
+        ("DarkGreen", "Indigo"),
+        ("MediumPurple", "White"),
+        ("MediumBlue", "MediumVioletRed"),
+        ("SaddleBrown", "Yellow"),
+    ]
+    start = perf_counter()
+    while perf_counter() - start < time:
+        c1, c2 = colors[randrange(0, len(colors))]
+        bloom.fade(Colors(c1).range_to(Colors(c2), 30), duration=12)
+        bloom.fade(Colors(c2).range_to(Colors(c1), 30), duration=12)
+
+    bloom.fade_all()
+
+
+def waterfall(bloom, highlight=False):
+    color = Colors(colors[randrange(0, len(colors))])
+    bloom.waterfall(color, highlight, seconds=time)
+    bloom.fade_all()
+
+
+def shower(bloom, highlight=False):
+    color = Colors(colors[randrange(0, len(colors))])
+    bloom.waterfall(
+        color, highlight, saturation=99, seconds=time)
+    bloom.fade_all()
+
+
+def waterfall_rainbow(bloom):
+    colors = [Colors(x) for x in colors]
+
+    bloom.waterfall(colors, seconds=time)
+    bloom.fade_all()
+
+
+def geyser(bloom, highlight=False):
+    color = Colors(colors[randrange(0, len(colors))])
+    bloom.geyser(color, highlight, seconds=time)
+    bloom.fade_all()
+
+
+def gusher(bloom, highlight=False):
+    color = Colors(colors[randrange(0, len(colors))])
+    bloom.geyser(color, highlight, saturation=99, seconds=time)
+    bloom.fade_all()
+
+
+def flicker(bloom):
+    bloom.flicker(duration=60)
+    bloom.fade_all()

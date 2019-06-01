@@ -1,8 +1,9 @@
-Luminous Bloom
+Pattern
 ==========================================
 
 .. toctree::
    :maxdepth: 2
 
-   bloom/index.rst
-   animations/index.rst
+.. automodule:: bloom.pattern
+   :members:
+   :undoc-members:

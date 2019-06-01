@@ -2,9 +2,12 @@ Bloom
 ==========================================
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+    :maxdepth: 2
+    :hidden:
 
-.. automodule:: bloom.bloom
-   :members:
-   :undoc-members:
+    control.rst
+    color.rst
+    image.rst
+    pattern.rst
+    tentacle.rst
+

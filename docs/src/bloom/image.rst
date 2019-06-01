@@ -1,8 +1,9 @@
-Luminous Bloom
+Image
 ==========================================
 
 .. toctree::
    :maxdepth: 2
 
-   bloom/index.rst
-   animations/index.rst
+.. automodule:: bloom.image
+   :members:
+   :undoc-members:

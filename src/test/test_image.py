@@ -2,12 +2,12 @@
 
 import unittest
 
-from bloom.image import Image
+from bloom.image import get_lines
 
 
 class ImageCase(unittest.TestCase):
     def test_get_lines(self):
-        lines = Image().get_lines("images/color_waves.jpg")
+        lines = get_lines("images/color_waves.jpg")
 
         self.assertEqual(len(lines), 64)
 

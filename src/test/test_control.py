@@ -2,16 +2,16 @@
 
 import unittest
 
-from bloom.bloom import LuminousBloom
+from bloom.control import Control
 
 
 class BloomTest(unittest.TestCase):
     def setUp(self):
-        self.bloom = LuminousBloom()
+        self.control = Control()
 
     def test_init(self):
-        for pixel in self.bloom.pixels:
+        for pixel in self.control.pixels:
             self.assertEqual(pixel, (0, 0, 0))
 
     def tearDown(self):
-        self.bloom.client.disconnect()
+        self.control.client.disconnect()

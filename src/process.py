@@ -2,10 +2,8 @@
 
 from random import randint, randrange
 
-from bloom.bloom import LuminousBloom
+from bloom.control import Control
 import animations.animations as animations
-
-bloom = LuminousBloom()
 
 all_animations = [
     (animations.swipe_and_stripe, None),
@@ -56,6 +54,7 @@ def pick_animation():
     previous.append(index)
     return all_animations[index]
 
+bloom = Control()
 
 while True:
     func, args = pick_animation()

@@ -13,10 +13,7 @@ from .tentacle import LENGTH
 def get_lines(image_path):
     """Returns a 64x64 pixel array all the lines of an image.
 
-    Parameters
-        ----------
-        image_path : string
-            Relative image page
+    :param image_path: Relative image path
     """
     img = PILImage.open(path.abspath(image_path))
     img = img.resize((LENGTH, LENGTH))

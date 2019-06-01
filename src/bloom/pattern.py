@@ -20,12 +20,11 @@ class Pattern(deque):
 
     Provided color may also be a list of colors equal to the length (l) of the pattern
 
-    Parameters
-    ----------
-    l : integer
-        The length of the color or range being provided
-    color_or_range: :class:`~bloom.color.Colors` | List(:class:`~bloom.color.Colors`)
-        The color or range to use for the pattern.
+    :param l: The length of the color or range being provided
+    :type l: integer
+        
+    :param color_or_range: The color or range to use for the pattern
+    :type color_or_range: :class:`~bloom.color.Colors` | List(:class:`~bloom.color.Colors`)
     """
 
     def __init__(self, l, color_or_range):
@@ -46,10 +45,8 @@ class Range(deque):
     """A deque constructed of a range of :class:`~bloom.color.Colors` (generator) 
     or list of :class:`~bloom.color.Colors`.
 
-    Parameters
-    ----------
-    color_range: Iterator(:class:`~bloom.color.Colors`) | List(:class:`~bloom.color.Colors`)
-        The color or range to use for the pattern.
+    :param color_range: The color or range to use for the pattern
+    :type color_range: Iterator(:class:`~bloom.color.Colors`) | List(:class:`~bloom.color.Colors`)
     """
     def __init__(self, color_range):
         if isinstance(color_range, types.GeneratorType):

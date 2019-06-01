@@ -35,12 +35,10 @@ class Tentacle:
     def colorize(self, pixels, rgb):
         """Set the :attr:`~bloom.control.Control.pixels` mapped through to tentacle to an rgb tuple.
 
-        Parameters
-        ----------
-        pixels : List(tuples)
-            List of :attr:`~bloom.control.Control.pixels`
-        rgb : tuple
-            Tuple in the form of (r, g, b)
+        :param pixels: List of :attr:`~bloom.control.Control.pixels`
+        
+        :param rgb: Tuple in the form of (r, g, b)
+        :type rgb: Tuple(integer, integer, integer)
         """
         for ic in range(LENGTH):
             if self.contains(self.start + ic):
@@ -51,12 +49,10 @@ class Tentacle:
     def patternize(self, pixels, colors):
         """Set the :attr:`~bloom.control.Control.pixels` mapped through the tentacle to a range of :mod:`~bloom.color`.
 
-        Parameters
-        ----------
-        pixels : List(tuples)
-            List of :attr:`~bloom.control.Control.pixels`
-        colors : List(:class:`~bloom.color.Colors`)
-            A list of Colors.
+        :param pixels: List of :attr:`~bloom.control.Control.pixels`
+
+        :param colors: A list of Colors.
+        :type colors: List(:class:`~bloom.color.Colors`)
         """
         for ic, c in enumerate(colors):
             if self.contains(self.start + ic):
@@ -67,19 +63,14 @@ class Tentacle:
     def get(self, pixels):
         """Returns a slice of pixels based on the start and end of the tentacle.
 
-        Parameters
-        ----------
-        pixels : List(tuples)
-            List of :attr:`~bloom.control.Control.pixels`
+        :param pixels: List of :attr:`~bloom.control.Control.pixels`
         """
         return pixels[self.start:self.end + 1]
 
     def contains(self, pixel):
         """ Returns True if a pixels exists within the tentacles start and end.
 
-        Parameters
-        ----------
-        pixel : integer
-            Any integer
+        :param pixel: Any integer
+        :type pixel: integer
         """
         return self.start <= pixel <= self.end

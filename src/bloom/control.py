@@ -36,10 +36,8 @@ class Control(object):
     def write_pixels(self, wait=0):
         """Utility method to use the opc client to write pixel state. This method direction calls `sleep`.
 
-        Parameters
-        ----------
-        wait : number
-            Number of seconds to wait before another write operation can continue.
+        :param wait: Number of seconds to wait before another write operation can continue.
+        :type wait: number
         """
         self.client.put_pixels(self.pixels, 0)
         sleep(wait)
@@ -59,16 +57,17 @@ class Control(object):
     def rotate(self, color, loops=1, direction=direction.RIGHT, duration=10):
         """Iterate over the tentacles, writing a color to each one.
 
-        Parameters
-        ----------
-        color : Colors|Range
-            A color range or color. Luminance will be calculated in a range to a single color. 
-        loops : integer
-            Number of tentacle rotations to perform
-        direction : string
-            One of `bloom.direction` constants
-        duration : integer
-            Sleep time `duration / 120`
+        :param color: A color range or color. Luminance will be calculated in a range to a single color. 
+        :type color: :class:`~bloom.color.Colors` | List(:class:`~bloom.color.Colors`)
+
+        :param loops: Number of tentacle rotations to perform
+        :type loops: integer
+        
+        :param direction: One of `bloom.direction` constants
+        :type direction: string
+        
+        :param duration: Sleep time `duration / 120`
+        :type duration: integer
         """
         color = range_or_luminance(color, 64)
 
@@ -89,16 +88,11 @@ class Control(object):
         """Iterate over the tentacles and rotate colors on to every other tentacle, 
         stepping each iteration by 1.
 
-        Parameters
-        ----------
-        color : Colors|Range
-            A color range or color. Luminance will be calculated in a range to a single color. 
-        loops : integer
-            Number of tentacle rotations to perform
-        direction : string
-            One of `bloom.direction` constants
-        duration : integer
-            Sleep time `duration / 120`
+        :param color: A color range or color. Luminance will be calculated in a range to a single color. 
+        :type color: :class:`~bloom.color.Colors` | List(:class:`~bloom.color.Colors`)
+
+        :param loops: Number of tentacle rotations to perform
+        :type loops: integer
         """
         color = range_or_luminance(color, 64)
 
@@ -118,16 +112,14 @@ class Control(object):
     def swipe(self, color, tentacles=[1, 2, 3, 4, 5, 6], direction=direction.UP, duration=1):
         """Swipe a single color onto any tentacles in a direction. The color will persist.
 
-        Parameters
-        ----------
-        color : Colors
-            Any color
-        tentacles : List(integers)
-            A list of integers mapped to tentacle keys
-        direction : string
-            One of `bloom.direction` constants
-        duration : integer
-            Sleep time `duration / 120`
+        :param color: Any color
+        :type color: :class:`~bloom.color.Colors`
+
+        :param tentacles: A list of integers mapped to tentacle keys
+        :type tentacles: List(integers)
+
+        :param direction: 'up' | 'down'
+        :type direction: :mod:`~bloom.direction`
         """
         rng = range(tentacle.LENGTH)
 
@@ -144,20 +136,20 @@ class Control(object):
     def swipe_blob(self, color, l=64, tentacles=[1, 2, 3, 4, 5, 6], direction=direction.UP, duration=1):
         """Swipe a range or luminance onto any tentacles in a direction. The color will fade.
 
-        Parameters
-        ----------
-        color : Colors|Range
-            A color range or color. If a single color then a degraded luminance will be calculated for the entire transition.
-        l : integer
-            Length of a color range, if provided.
-        loops : integer
-            Number of tentacle rotations to perform
-        tentacles : List(integers)
-            A list of integers mapped to tentacle keys
-        direction : string
-            One of `bloom.direction` constants
-        duration : integer
-            Sleep time `duration / 120`
+        :param color: Any color
+        :type color: :class:`~bloom.color.Colors` | List(:class:`~bloom.color.Colors`)
+
+        :param l: Length of a color range, if a range is provided
+        :type l: integer
+
+        :param loops: Number of tentacle rotations to perform
+        :type loops: integer
+
+        :param tentacles: A list of integers mapped to tentacle keys
+        :type tentacles: List(integers)
+
+        :param direction: 'up' | 'down'
+        :type direction: :mod:`~bloom.direction`
         """
         colors = range_or_luminance(color, l)
 
@@ -184,16 +176,14 @@ class Control(object):
     def swipe_pattern(self, color_or_range, tentacles=[1, 2, 3, 4, 5, 6], direction=direction.UP, duration=2):
         """Swipe a color or range as a pattern onto any number of tentacles.
 
-        Parameters
-        ----------
-        color : Colors|Range
-            A color range or colors.
-        tentacles : List(integers)
-            A list of integers mapped to tentacle keys
-        direction : string
-            One of `bloom.direction` constants
-        duration : integer
-            Sleep time `duration / 120`
+        :param color: Any color
+        :type color: :class:`~bloom.color.Colors` | List(:class:`~bloom.color.Colors`)
+
+        :param tentacles: A list of integers mapped to tentacle keys
+        :type tentacles: List(integers)
+
+        :param direction: 'up' | 'down'
+        :type direction: :mod:`~bloom.direction`
         """
         length = len(color_or_range)
         pattern = Pattern(length, color_or_range)
@@ -221,20 +211,20 @@ class Control(object):
     def stripe(self, color_or_range, length=8, step=2, tentacles=[1, 2, 3, 4, 5, 6], direction=direction.UP, duration=1):
         """Patternize any tentacle with a color range separated by black of the same length
 
-        Parameters
-        ----------
-        color_or_range : Colors|Range
-            A color range or colors.
-        length : integer
-            The length of the stripe. If color_or_range is a range of colors then length must be equal to its length.
-        step : integer
-            The number of pixels to adjust the pattern during animation
-        tentacles : List(integers)
-            A list of integers mapped to tentacle keys
-        direction : string
-            One of `bloom.direction` constants
-        duration : integer
-            Sleep time `duration / 120`
+        :param color_or_range: Any color
+        :type color_or_range: :class:`~bloom.color.Colors` | List(:class:`~bloom.color.Colors`)
+
+        :param length: The length of the stripe. If color_or_range is a range of colors then length must be equal to its length.
+        :type length: integer
+
+        :param step: The number of pixels to adjust the pattern during animation
+        :type step: integer
+
+        :param tentacles: A list of integers mapped to tentacle keys
+        :type tentacles: List(integers)
+
+        :param direction: 'up' | 'down'
+        :type direction: :mod:`~bloom.direction`
         """
         pattern = Pattern(length, color_or_range)
 
@@ -253,20 +243,20 @@ class Control(object):
     def stripe_multi(self, list_of_ranges, length=8, step=2, tentacles=[[1, 3, 5], [2, 4, 6]], duration=1):
         """Patternize any tentacle with a color range separated by black of the same length. Multiple ranges can be applied seperately to specific lists of tentacles.
 
-        Parameters
-        ----------
-        list_of_ranges : Colors|Range
-            A color range or colors.
-        length : integer
-            The length of the stripe. If color_or_range is a range of colors then length must be equal to its length.
-        step : integer
-            he number of pixels to adjust the pattern during animation
-        tentacles : List(List[integers])
-            A list of integers mapped to tentacle keys
-        direction : string
-            One of `bloom.direction` constants
-        duration : integer
-            Sleep time `duration / 120`
+        :param list_of_ranges: Any color
+        :type list_of_ranges: List(List(:class:`~bloom.color.Colors`))
+
+        :param length: The length of the stripe. If color_or_range is a range of colors then length must be equal to its length.
+        :type length: integer
+
+        :param step: The number of pixels to adjust the pattern during animation
+        :type step: integer
+
+        :param tentacles: A list of integers mapped to tentacle keys
+        :type tentacles: List(List(integers))
+
+        :param direction: 'up' | 'down'
+        :type direction: :mod:`~bloom.direction`
         """
         pattern1 = Pattern(length, list_of_ranges[0])
         pattern2 = Pattern(length, list_of_ranges[1])

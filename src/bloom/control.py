@@ -246,7 +246,7 @@ class Control(object):
                 self.pixels = self.tentacles[t].patternize(
                     self.pixels, pattern)
 
-            pattern.shift(step)
+            pattern.rotate(step)
 
             self.write_pixels(duration / 120)
 
@@ -280,8 +280,8 @@ class Control(object):
                 self.pixels = self.tentacles[t].patternize(
                     self.pixels, pattern2)
 
-            pattern1.shift(step)
-            pattern2.shift(step)
+            pattern1.rotate(step)
+            pattern2.rotate(step)
 
             self.write_pixels(duration / 120)
 

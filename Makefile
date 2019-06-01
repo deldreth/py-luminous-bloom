@@ -17,6 +17,6 @@ start:
 	python src/process.py
 
 docs:
-	cd docs && $(MAKE) singlehtml
+	cd docs && $(MAKE) html
 
 .PHONY: init test start docs Makefile

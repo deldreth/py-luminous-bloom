@@ -4,6 +4,9 @@ from colour import Color, color_scale
 
 
 class Colors(Color):
+    """Extends the :mod:`~colour` Color class in order to allow for rgb values to
+    to be returned as tuples of 0-255."""
+
     def __init__(self, color=None, pick_for=None, **kwargs):
         super().__init__(color, pick_for, kwargs)
 
@@ -14,6 +17,7 @@ class Colors(Color):
         return str(self.rgb)
 
     def get_rgb(self):
+        """Override colour.Color rgb getter to return RGB tuple relative to 255."""
         red, green, blue = super().get_rgb()
         return (round(red * 255), round(green * 255), round(blue * 255))
 

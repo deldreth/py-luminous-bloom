@@ -81,7 +81,7 @@ Install env and required libs:
 ```
 sudo apt-get -y install python-dev python-setuptools python3-dev python-virtualenv cmake
 
-sudo apt-get -y install libtiff5-dev libjpeg62-turbo-dev zlib1g-dev   libfreetype6-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev python-tk python3-tk libharfbuzz-dev libfribidi-dev
+sudo apt-get -y install libtiff5-dev libjpeg62-turbo-dev zlib1g-dev   libfreetype6-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev python-tk python3-tk libharfbuzz-dev libfribidi-dev supervisor libopenjp2-7
 ```
 
 #### Setup Luminous Bloom
